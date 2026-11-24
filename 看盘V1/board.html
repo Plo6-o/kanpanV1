@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0b0f17">
+<title>总看板 · 一屏看完</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0b0f17;--panel:#121826;--panel2:#18202f;--line:#22304a;--tx:#e8eef7;--mu:#8b9ab3;--dim:#5d6d88;
+--up:#ff5b5b;--dn:#12c48b;--wn:#ffb648;--gd:#3ecf8e;--ac:#5b9cff;--pu:#a78bfa;--or:#ff8a3d}
+body{background:var(--bg);color:var(--tx);font:15px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;padding-bottom:72px}
+.wrap{max-width:960px;margin:0 auto;padding:11px}
+header{position:sticky;top:0;z-index:30;background:rgba(11,15,23,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:9px 0}
+.hd{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.logo{font-size:16.5px;font-weight:800}.logo span{color:var(--or)}
+.sub{color:var(--mu);font-size:11.5px;margin-top:2px}
+button.btn{background:var(--panel2);border:1px solid var(--line);color:var(--tx);border-radius:8px;padding:7px 11px;font-size:12.5px;cursor:pointer}
+button.btn.pri{background:var(--or);color:#1a0d02;border-color:transparent;font-weight:800}
+button.btn:active{transform:scale(.97)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:9px}
+h3{font-size:13.5px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+h3 .n{font-size:11px;color:var(--mu);font-weight:500;margin-left:auto}
+.up{color:var(--up)}.dn{color:var(--dn)}.wn{color:var(--wn)}.gd{color:var(--gd)}.ac{color:var(--ac)}.mu{color:var(--mu)}.dim{color:var(--dim)}.or{color:var(--or)}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.row{display:flex;gap:8px;padding:6px 0;border-bottom:1px dashed rgba(255,255,255,.05);font-size:13px}
+.row:last-child{border-bottom:none}
+.lab{color:var(--mu);flex:0 0 72px;font-size:12px}.val{flex:1;min-width:0}
+.foot{margin-top:8px;padding:8px 10px;background:rgba(255,138,61,.07);border-left:3px solid var(--or);border-radius:0 7px 7px 0;font-size:12.4px;line-height:1.65;color:#f0d9c4}
+/* hero */
+.hero{background:linear-gradient(160deg,#16203a,#101724);border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:9px}
+.hero-top{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.badge{font-size:11px;border-radius:20px;padding:2px 9px;border:1px solid var(--line)}
+.b-bd{color:#ffd79a;border-color:#6b5228;background:rgba(255,182,72,.12)}
+.b-nt{color:var(--mu)}
+.bigpx{font-size:46px;font-weight:900;font-family:ui-monospace,Menlo,monospace;letter-spacing:-2px;line-height:1.05;margin:7px 0 2px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:9px}
+.kpi{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:7px 8px}
+.kpi .k{font-size:10.5px;color:var(--mu)}
+.kpi .v{font-size:17px;font-weight:900;font-family:ui-monospace,Menlo,monospace;margin-top:1px}
+@media(max-width:420px){.kpis{grid-template-columns:repeat(2,1fr)}}
+/* 关键位 */
+.dist{margin-top:4px}
+.drow{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:12.3px}
+.drow .dn{flex:0 0 92px;color:var(--mu)}
+.drow .dv{flex:0 0 68px;text-align:right;font-family:ui-monospace,Menlo,monospace;font-weight:700}
+.bar{flex:1;height:7px;border-radius:4px;background:rgba(255,255,255,.07);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:4px}
+/* 动作 */
+.act{display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed rgba(255,255,255,.05);font-size:13px}
+.act:last-child{border-bottom:none}
+.act .n{width:19px;height:19px;flex:0 0 19px;border-radius:6px;background:var(--or);color:#1a0d02;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:11.5px;margin-top:1px}
+/* 条件单 */
+.ord{display:flex;align-items:center;gap:8px;padding:8px 9px;border:1px solid var(--line);border-radius:9px;margin-bottom:6px;background:var(--panel2)}
+.ord .px{flex:0 0 66px;font-family:ui-monospace,Menlo,monospace;font-weight:900;font-size:15px}
+.ord .a{flex:0 0 74px;font-size:13px;font-weight:700}
+.ord .n{flex:1;min-width:0;font-size:11.5px;color:var(--mu)}
+/* 链灯 */
+.lamps{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+@media(max-width:520px){.lamps{grid-template-columns:repeat(2,1fr)}}
+.lamp{border:1px solid var(--line);border-radius:9px;padding:8px;background:var(--panel2)}
+.lamp .lt{font-size:12.5px;font-weight:800;display:flex;align-items:center;gap:5px}
+.lamp .ls{font-size:10.5px;margin-top:2px}
+.lamp .lx{font-size:10.5px;color:var(--dim);margin-top:3px;line-height:1.45}
+.dot{width:8px;height:8px;border-radius:50%;flex:0 0 8px}
+.d-hot{background:var(--up);box-shadow:0 0 7px rgba(255,91,91,.7)}
+.d-watch{background:var(--wn);box-shadow:0 0 7px rgba(255,182,72,.6)}
+.d-cold{background:#4f8fd0}
+.d-mix{background:var(--pu)}
+.d-sell{background:#fff;box-shadow:0 0 7px rgba(255,255,255,.55)}
+.d-src{background:var(--gd)}
+/* 轮动时钟 */
+.clock{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:560px){.clock{grid-template-columns:1fr}}
+.cbox{border:1px solid var(--line);border-radius:10px;padding:9px;background:var(--panel2)}
+.cbox .ct{font-size:13px;font-weight:800;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.cbox .cs{font-size:11px;margin-top:3px}
+.cbox .cx{font-size:11.5px;color:var(--mu);margin-top:5px;line-height:1.55}
+/* 表 */
+.tbl{width:100%;border-collapse:collapse;font-size:12.3px}
+.tbl th{color:var(--mu);font-weight:600;text-align:left;padding:5px 4px;border-bottom:1px solid var(--line);font-size:11px;white-space:nowrap}
+.tbl td{padding:5px 4px;border-bottom:1px solid rgba(255,255,255,.04)}
+.tbl .num{text-align:right;font-family:ui-monospace,Menlo,monospace;white-space:nowrap}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -3px;padding:0 3px}
+.tw table{min-width:430px}
+/* 底部导航 */
+nav.bot{position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(13,18,29,.97);backdrop-filter:blur(12px);
+ border-top:1px solid var(--line);display:flex;padding:5px 2px calc(5px + env(safe-area-inset-bottom))}
+nav.bot a{flex:1;text-align:center;font-size:10.5px;color:var(--mu);text-decoration:none;padding:5px 1px;border-radius:8px}
+nav.bot a .ic{display:block;font-size:16px;line-height:1.2}
+nav.bot a:active{background:var(--panel2);color:var(--tx)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}}
+.link{display:flex;align-items:center;gap:9px;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);text-decoration:none;color:var(--tx);margin-bottom:6px}
+.link .ic{font-size:19px}
+.link .t{font-size:13px;font-weight:700}
+.link .s{font-size:11px;color:var(--mu)}
+textarea{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--tx);border-radius:9px;padding:9px;font-size:13px;font-family:inherit;resize:vertical}
+footer{color:var(--dim);font-size:11px;text-align:center;padding:14px 10px 20px;line-height:1.75}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+ <div class="hd">
+  <div style="flex:1;min-width:190px">
+   <div class="logo">总看板 <span>一屏看完</span></div>
+   <div class="sub" id="ts">加载中…</div>
+  </div>
+  <button class="btn pri" onclick="refresh()">⟳ 刷新</button>
+ </div>
+</div></header>
+
+<div class="wrap">
+ <div class="hero">
+  <div class="hero-top"><span class="badge b-bd" id="env">—</span><span class="badge b-nt mono" id="clock">—</span><span class="badge b-nt mono" id="upd">—</span></div>
+  <div class="bigpx" id="px">—</div>
+  <div class="mono" style="color:var(--mu);font-size:12px" id="pxsub">—</div>
+  <div class="kpis">
+   <div class="kpi"><div class="k">持仓</div><div class="v" id="k_qty">—</div></div>
+   <div class="kpi"><div class="k">成本</div><div class="v" id="k_cost">—</div></div>
+   <div class="kpi"><div class="k">浮盈亏</div><div class="v" id="k_pl">—</div></div>
+   <div class="kpi"><div class="k">仓位</div><div class="v" id="k_pos">—</div></div>
+  </div>
+  <div id="dists" class="dist"></div>
+ </div>
+
+ <div class="card" id="sec_act">
+  <h3>⛔ 今天唯一要做的事 <span class="n">写死 · 照做</span></h3>
+  <div id="acts"></div>
+  <div class="foot"><b>铁律：只做条件单里写好的动作，不做新决策。</b>何志坚：这种精细化博弈很难做。<b>今天涨得越猛，明天越是你的减仓窗口，不是加仓窗口。</b></div>
+ </div>
+
+ <div class="card" id="sec_clock">
+  <h3>🧭 轮动时钟 · 四条大链 <span class="n">链与链之间才轮动</span></h3>
+  <div class="clock" id="clockbox"></div>
+  <div class="foot">链内部是<b>同步</b>的（实测相关 0.5~0.9），不是接力。<b>轮动发生在链与链之间。</b>高位链＝卖点，低位链＝候选，但候选要等启动信号。</div>
+ </div>
+
+ <div class="card" id="sec_lamp">
+  <h3>🔗 九环状态灯 <span class="n">红=已启动最挤 · 黄=外围启动A股未动 · 蓝=低位未启动 · 白=高位该卖</span></h3>
+  <div class="lamps" id="lamps"></div>
+ </div>
+
+ <div class="card" id="sec_dual">
+  <h3>⚖️ 双轨道 · 一个开关 <span class="n">上轨避险 / 下轨进攻</span></h3>
+  <div class="foot" style="margin-bottom:9px"><b>两套体系不打架，因为它们共用一个开关：情绪坐标。</b>上轨是 ETF 底仓（熊市避险），下轨是短线梯队（进攻），中间的开关决定<b>钱停在哪一轨</b>。</div>
+  <div style="border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px;background:var(--panel2)">
+   <div style="font-weight:800;font-size:13.5px;margin-bottom:4px">⚖️ 中间的开关 · 情绪坐标</div>
+   <div style="font-size:19px;font-weight:900;color:var(--wn);font-family:ui-monospace,Menlo,monospace">多头胜【开盘杀】</div>
+   <div class="dim" style="font-size:11.5px;margin-top:4px">涨停 145 / 跌停 3（昨 28/58）；最高 6 板没塌；<b>但一字只有 3 家 = 分歧型的强</b></div>
+   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+    <div style="border:1px solid #256b4c;border-radius:8px;padding:7px;background:rgba(62,207,142,.08)">
+     <div style="font-size:11.5px;font-weight:800;color:#a9f5cd">开下轨</div>
+     <div style="font-size:11px;color:var(--mu);margin-top:3px">强平衡、多头胜【开盘杀】<br>下轨可开小仓；上轨只做底仓不动</div></div>
+    <div style="border:1px solid #6b2b47;border-radius:8px;padding:7px;background:rgba(255,91,91,.08)">
+     <div style="font-size:11.5px;font-weight:800;color:#ffb3b3">冻结下轨</div>
+     <div style="font-size:11px;color:var(--mu);margin-top:3px">弱平衡、空头胜【开盘修复】<br><b class=bad>下轨全部冻结；上轨只加不减，短线仓回 ETF</b></div></div>
+   </div>
+  </div>
+  <div style="border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px;background:var(--panel2)">
+   <div style="font-weight:800;font-size:13.5px;margin-bottom:6px">上轨 · ETF 底仓（避险）</div>
+   <div class="act"><span class="n">持有</span><span><b>宽基底仓（代码/数量/成本请在交易看板填写）</b><br><span class="dim">现价 / 浮亏 / 仓位 / 现金 自动算</span></span></div><div class="act"><span class="n">可加</span><span><b>510300 沪深300ETF 4.023</b><br><span class="dim">1手 402元｜宽基底仓，熊市避险主力</span></span></div><div class="act"><span class="n">可加</span><span><b>512800 银行ETF 0.916</b><br><span class="dim">1手 92元｜🔵国内电，只跟国内政策/红利周期</span></span></div><div class="act"><span class="n">可加</span><span><b>159611 电力ETF 1.031</b><br><span class="dim">1手 103元｜🔵国内电，<b>不要跟美股电力混</b></span></span></div><div class="act"><span class="n">可加</span><span><b>513050 中概互联ETF 0.863</b><br><span class="dim">1手 86元｜T+0，跨境，海外映射</span></span></div><div class="act"><span class="n">场外</span><span><b>022610 A500联接I类</b><br><span class="dim">1元起投｜0申购费｜满7天0赎回｜<b>摊成本的正确载体</b></span></span></div>
+   <div class="foot" style="margin-top:8px"><b>切换条件：</b>情绪坐标 = <b class=up>强平衡 / 多头胜</b> → 上轨<b>可以不动</b>，小篮子去下轨找机会；= <b class=dn>空头胜 / 退潮</b> → <b class=bad>上轨只加不减</b>，小篮子全部回 ETF。</div>
+  </div>
+  <div style="border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--panel2)">
+   <div style="font-weight:800;font-size:13.5px;margin-bottom:6px">下轨 · 短线梯队（进攻）　<a class="ac" href="ladder.html" style="font-size:12px">→ 打开梯队看板</a></div>
+   <div class="act"><span class="n">D头</span><span><b>北纬科技 9天6板</b><br><span class="dim">换手板 ｜ 内核：四足机器人、手机游戏、物联网</span></span></div><div class="act"><span class="n">梯队</span><span><b>连板 23 家 / 最高 6 板</b><br><span class="dim">一字 3 ｜ T字 3 ｜ 封单≥1亿 21</span></span></div><div class="act"><span class="n">跟随</span><span><b>真跟随 0 只 / 情绪扩散 14 只</b><br><span class="dim">以 北纬科技 为锚的第二层 = <b class=bad>最容易买错</b></span></span></div><div class="act"><span class="n">规则</span><span><b>只有「低位+有身份+有换手」可做</b><br><span class="dim">爆量/炸板≥3 的高位票：<b>次日高开是减仓点</b></span></span></div>
+   <div class="foot" style="margin-top:8px"><b>切换条件：</b>本轨<b>只在情绪坐标为「强平衡/多头胜」时开</b>；一旦 D头断板或高度下移 → <b class=bad>本轨立即冻结，资金回上轨</b>。</div>
+  </div>
+ </div>
+
+<div class="card" id="sec_us">
+  <h3>🌡️ 外围实时 · 今晚 <span class="n" id="usts">静态快照</span></h3>
+  <div class="tw"><table class="tbl"><thead><tr><th>名称</th><th>环节</th><th class="num">今晚</th><th>读法</th></tr></thead><tbody id="usbody"></tbody></table></div>
+  <div class="foot"><b>怎么用：</b>今晚光互连全线 +17~25%、AI供电 +6~15%、而<b class='dn'>传统公用事业全跌</b>（杜克 −1.12%、南方 −0.57%）。<b>这是「防御内部劈叉」＝钱在搬家，不是有人在买防御。</b>对应 A 股，明天的映射只落在 🌍国外绳那一格。</div>
+ </div>
+
+ <div class="card" id="sec_ord">
+  <h3>📋 条件单（券商 App 里写好） <span class="n">触及即执行</span></h3>
+  <div id="ords"></div>
+  <button class="btn" onclick="copyOrd(this)">📋 一键复制条件单</button>
+  <div class="foot"><b>🚫 自动买入：不设。</b>闸门＝买完这个标的占总资产 &gt;50% 一律不买。<b>⛔ 硬死线已破 → 这条要重新写死。</b></div>
+ </div>
+
+ <div class="card" id="sec_etf">
+  <h3>💰 ETF 能买什么 <span class="n">个股 1 手全部超预算</span></h3>
+  <div class="tw"><table class="tbl"><thead><tr><th>ETF</th><th class="num">现价</th><th class="num">涨跌</th><th class="num">1手</th><th class="num">买得起</th></tr></thead><tbody id="etfbody"></tbody></table></div>
+  <div class="foot"><b>个股 1 手门槛：</b>长飞 21,008｜中际旭创 41,720｜新易盛 18,136｜天孚 11,630｜北方华创 54,109｜寒武纪 91,480 —— <b class='bad'>全部买不起</b>。<b>ETF 才是小账户唯一路径。</b></div>
+ </div>
+
+ <div class="card" id="sec_cal">
+  <h3>📅 事件日历</h3>
+  <div class="tw"><table class="tbl"><thead><tr><th>日期</th><th>事件</th><th>影响</th></tr></thead><tbody id="calbody"></tbody></table></div>
+ </div>
+
+ <div class="card">
+  <h3>🧪 复盘速记 <span class="n">自动保存到本机</span></h3>
+  <textarea id="rv" rows="4" placeholder="今天我做了什么？为什么？有没有按规则执行？&#10;例：日期 | 标的 | 动作 | 理由 | 按规则执行 □是□否"></textarea>
+  <div style="margin-top:7px;display:flex;gap:7px;flex-wrap:wrap">
+   <button class="btn pri" onclick="saveRv(this)">💾 保存</button>
+   <button class="btn" onclick="copyRv(this)">📋 复制</button>
+   <button class="btn" onclick="exportAll()">⬇️ 导出</button>
+  </div>
+  <div class="foot">第四栏最重要 —— <b>盈亏是结果，纪律是能力。</b>每次只问一句：<b>「这一笔是按规则做的吗？」</b></div>
+ </div>
+
+ <div class="card">
+  <h3>🔗 其他页面</h3>
+  <a class="link" href="dashboard.html"><span class="ic">📊</span><span><span class="t">交易看板</span><br><span class="s">今日 / 五层 / 价位 / 条件单 / 复盘 / 术语</span></span></a>
+  <a class="link" href="ladder.html"><span class="ic">🪜</span><span><span class="t">A股梯队看板</span><br><span class="s">短线视角：情绪坐标 / 连板梯队 / 一字·跟风 / 题材链 / 今日动作</span></span></a>
+  <a class="link" href="chain.html"><span class="ic">🌍</span><span><span class="t">产业链地图</span><br><span class="s">7 层 × 国内电 / 国外绳 分类 + ETF 一览</span></span></a>
+  <a class="link" href="rotate.html"><span class="ic">🔗</span><span><span class="t">题材轮动图</span><br><span class="s">九环传导链 + 140 日实测相关性 + 布局规则</span></span></a>
+ </div>
+
+ <footer>
+  A 股 2026-11-23 收盘 ｜ 美股 2026-11-23 23:31 北京时间 / 美东 10:31（开盘约 1 小时）<br>
+  美股为静态快照（新浪接口需 Referer，浏览器无法自动刷新）。本文为个人研究笔记，<b>不构成投资建议</b>。
+ </footer>
+</div>
+
+<nav class="bot">
+ <a href="#sec_act"><span class="ic">⛔</span>动作</a>
+ <a href="#sec_dual"><span class="ic">⚖️</span>双轨</a>
+ <a href="#sec_clock"><span class="ic">🧭</span>时钟</a>
+ <a href="#sec_lamp"><span class="ic">🔗</span>九环</a>
+ <a href="#sec_us"><span class="ic">🌡️</span>外围</a>
+ <a href="#sec_ord"><span class="ic">📋</span>条件单</a>
+ <a href="#sec_etf"><span class="ic">💰</span>ETF</a>
+</nav>
+
+<script>
+const D={"A": {"601138": {"mk": "A", "code": "601138", "name": "工业富联", "g": "⑥服务器整机", "last": 38.29, "r5": 5.715074544450571, "r20": -18.06120265354162, "r60": -39.06747294716742, "hi": 66.57, "lo": 35.9, "dhi": -42.481598317560454, "dlo": 6.6573816155988785, "pos": 7.792631235735249, "n": 131}, "688256": {"mk": "A", "code": "688256", "name": "寒武纪", "g": "②AI芯片", "last": 914.8, "r5": 1.8742274240787449, "r20": -5.495867768595042, "r60": -11.613526570048316, "hi": 1136.01, "lo": 767.93, "dhi": -19.472539854402694, "dlo": 19.125441120935506, "pos": 39.90165181482286, "n": 131}, "002371": {"mk": "A", "code": "002371", "name": "北方华创", "g": "②半导体设备", "last": 541.09, "r5": -0.9700031113307306, "r20": 4.659574468085115, "r60": -24.262698934815152, "hi": 718.0, "lo": 478.74, "dhi": -24.63927576601671, "dlo": 13.023770731503536, "pos": 26.059516843601116, "n": 131}, "603986": {"mk": "A", "code": "603986", "name": "兆易创新", "g": "③存储", "last": 214.61, "r5": -3.857181256159836, "r20": -22.36932537529389, "r60": -47.535813817043945, "hi": 411.2, "lo": 205.88, "dhi": -47.80885214007782, "dlo": 4.2403341752477175, "pos": 4.251899473991827, "n": 131}, "301308": {"mk": "A", "code": "301308", "name": "江波龙", "g": "③存储模组", "last": 193.21, "r5": -3.051803383979279, "r20": -16.298433492756637, "r60": -48.95268592202741, "hi": 384.082, "lo": 186.162, "dhi": -49.69563791065449, "dlo": 3.7859498716172, "pos": 3.5610347615198075, "n": 131}, "300308": {"mk": "A", "code": "300308", "name": "中际旭创", "g": "④光模块", "last": 417.2, "r5": 2.0123725456634878, "r20": -29.823380992430614, "r60": -55.70212973797152, "hi": 941.806, "lo": 393.0, "dhi": -55.70212973797152, "dlo": 6.157760814249369, "pos": 4.409572781638682, "n": 131}, "300502": {"mk": "A", "code": "300502", "name": "新易盛", "g": "④光模块", "last": 181.36, "r5": 8.729016786570742, "r20": -27.94310461281735, "r60": -58.9683257918552, "hi": 456.73, "lo": 158.21, "dhi": -60.29163838591728, "dlo": 14.632450540420972, "pos": 7.754924293179689, "n": 131}, "300394": {"mk": "A", "code": "300394", "name": "天孚通信", "g": "④光器件", "last": 116.3, "r5": 5.535390199637025, "r20": -40.958472941415366, "r60": -57.33362682515224, "hi": 284.66, "lo": 102.18, "dhi": -59.14424225391696, "dlo": 13.818751223331361, "pos": 7.7378342832091125, "n": 131}, "002463": {"mk": "A", "code": "002463", "name": "沪电股份", "g": "⑤AI PCB", "last": 82.7, "r5": 11.786969451203033, "r20": -16.38018200202225, "r60": -31.77130599785496, "hi": 128.25, "lo": 72.9, "dhi": -35.51656920077973, "dlo": 13.44307270233196, "pos": 17.705510388437215, "n": 131}, "600183": {"mk": "A", "code": "600183", "name": "生益科技", "g": "⑤覆铜板", "last": 60.75, "r5": -0.9618519726116825, "r20": -39.407540394973076, "r60": -54.25451807228916, "hi": 154.48, "lo": 58.37, "dhi": -60.674520973588805, "dlo": 4.077437039575127, "pos": 2.4763292061179927, "n": 131}, "000977": {"mk": "A", "code": "000977", "name": "浪潮信息", "g": "⑥服务器", "last": 44.16, "r5": -13.968439509059039, "r20": -22.743177046885933, "r60": -42.16110019646365, "hi": 86.35, "lo": 43.25, "dhi": -48.85929357266937, "dlo": 2.10404624277456, "pos": 2.1113689095127532, "n": 131}, "002837": {"mk": "A", "code": "002837", "name": "英维克", "g": "⑦液冷", "last": 32.76, "r5": -5.9701492537313605, "r20": -23.760763323248778, "r60": -39.467849223946786, "hi": 68.49, "lo": 32.04, "dhi": -52.16819973718791, "dlo": 2.2471910112359605, "pos": 1.9753086419753059, "n": 131}, "002335": {"mk": "A", "code": "002335", "name": "科华数据", "g": "⑦数据中心供电", "last": 22.42, "r5": -4.433077578857625, "r20": -12.999611951882029, "r60": -26.006600660066002, "hi": 32.63, "lo": 21.62, "dhi": -31.29022372050261, "dlo": 3.700277520814055, "pos": 7.266121707538607, "n": 131}, "600900": {"mk": "A", "code": "600900", "name": "长江电力", "g": "⑧水电", "last": 31.35, "r5": 2.820596917021989, "r20": 4.9899531145344955, "r60": 12.124463519313311, "hi": 31.62, "lo": 27.85, "dhi": -0.8538899430740043, "dlo": 12.5673249551167, "pos": 92.83819628647217, "n": 131}, "601985": {"mk": "A", "code": "601985", "name": "中国核电", "g": "⑧核电", "last": 9.78, "r5": -1.311806256306769, "r20": 3.2734952481520363, "r60": 12.54315304948217, "hi": 9.98, "lo": 8.69, "dhi": -2.0040080160320772, "dlo": 12.54315304948217, "pos": 84.49612403100768, "n": 131}, "600795": {"mk": "A", "code": "600795", "name": "国电电力", "g": "⑧火电", "last": 5.42, "r5": -1.6333938294010864, "r20": 5.242718446601935, "r60": 6.066536203522488, "hi": 5.62, "lo": 4.98, "dhi": -3.558718861209964, "dlo": 8.835341365461847, "pos": 68.74999999999996, "n": 131}, "002518": {"mk": "A", "code": "002518", "name": "科士达", "g": "⑨电网/储能", "last": 24.01, "r5": -4.342629482071714, "r20": -12.659148781375041, "r60": -28.070701018573995, "hi": 39.49, "lo": 23.24, "dhi": -39.199797417067614, "dlo": 3.3132530120482118, "pos": 4.738461538461556, "n": 131}, "300274": {"mk": "A", "code": "300274", "name": "阳光电源", "g": "⑨光伏储能", "last": 70.23, "r5": -7.360506529481592, "r20": 0.0, "r60": -37.54279870158743, "hi": 112.445, "lo": 65.29, "dhi": -37.54279870158743, "dlo": 7.566242916219945, "pos": 10.476089492100519, "n": 131}}, "POS": {"601138": 8, "688256": 40, "002371": 26, "603986": 4, "301308": 4, "300308": 4, "300502": 8, "300394": 8, "002463": 18, "600183": 2, "000977": 2, "002837": 2, "002335": 7, "600900": 93, "601985": 84, "600795": 69, "002518": 5, "300274": 10}, "USLIVE": [["gb_nvda", "英伟达", "②AI芯片", 35.4], ["gb_cohr", "Coherent", "④光模块", 19.65], ["gb_lite", "Lumentum", "④光模块", 22.55], ["gb_glw", "康宁", "④光纤", 17.9], ["gb_mu", "美光", "③存储", 19.96], ["gb_stx", "希捷", "③存储", 18.82], ["gb_aaoi", "Applied Opto", "④光模块", 22.76], ["gb_alab", "Astera Labs", "④互联", 19.33], ["gb_mrvl", "迈威尔", "②ASIC", 21.9], ["gb_tsm", "台积电", "②代工", 17.01], ["gb_amat", "应用材料", "②设备", 15.12], ["gb_aph", "安费诺", "⑤连接器", 10.58], ["gb_jbl", "Jabil", "⑥服务器", 9.33], ["gb_cls", "Celestica", "⑥服务器", 9.49], ["gb_vrt", "Vertiv", "⑦供电液冷", 14.77], ["gb_etn", "Eaton", "⑨电网设备", 8.15], ["gb_vst", "Vistra", "⑧电力", 8.24], ["gb_tln", "Talen", "⑧AI供电", 8.62], ["gb_ceg", "Constellation", "⑧核电", 5.88], ["gb_gev", "GE Vernova", "⑧燃机/⑨电网", 9.6], ["gb_goog", "Alphabet", "①云Capex", 6.16], ["gb_amzn", "Amazon", "①云Capex", 4.09], ["gb_msft", "Microsoft", "①云Capex", 3.98], ["gb_orcl", "Oracle", "①云", 14.86], ["gb_meta", "Meta", "①云", 5.67], ["gb_duk", "Duke", "⑧防御公用", -1.12], ["gb_so", "Southern", "⑧防御公用", -0.57], ["gb_nee", "NextEra", "⑧防御公用", -0.13], ["gb_aep", "AEP", "⑧防御公用", 0.82], ["gb_bep", "Brookfield", "⑧水电", 2.23], ["gb_fslr", "First Solar", "④光伏", 6.79], ["gb_anet", "Arista", "⑥网络", 9.84], ["gb_csco", "Cisco", "⑥网络", 6.34], ["gb_ibm", "IBM", "⑥服务器", 4.39]], "RINGS": [{"no": "①", "t": "云厂Capex", "s": "源头", "lamp": "src", "txt": "四大云厂 Q2 capex >1700亿｜全年指引约 7450亿", "c": [], "u": ["gb_goog", "gb_amzn", "gb_msft", "gb_orcl", "gb_meta"], "act": "只当信号用，不当标的"}, {"no": "②", "t": "AI芯片/设备", "s": "国内电", "lamp": "cold", "txt": "A 股芯片是内需，英伟达 +35.4% 不传导", "c": ["688256", "002371"], "u": ["gb_nvda", "gb_mrvl", "gb_tsm", "gb_amat"], "act": "不跟美股，看国内晶圆厂资本开支"}, {"no": "③", "t": "存储", "s": "最低位·未启动", "lamp": "cold", "txt": "区间位仅 3~5%，但 5 日仍 −3~4%", "c": ["603986", "301308"], "u": ["gb_mu", "gb_stx"], "act": "低位≠买点。等 5 日转正 + EML 缺口信号"}, {"no": "④", "t": "互联·绳子", "s": "已启动·最挤", "lamp": "hot", "txt": "新易盛 5日+8.7%、天孚+5.5%、沪电+11.8%", "c": ["300308", "300502", "300394"], "u": ["gb_lite", "gb_cohr", "gb_glw", "gb_aaoi", "gb_alab"], "act": "高开即接盘位。日内强势的方向是卖点"}, {"no": "⑤", "t": "AI PCB/CCL", "s": "已启动", "lamp": "hot", "txt": "沪电 +11.8% vs 生益 −1.0%，环节内差 12pct", "c": ["002463", "600183"], "u": ["gb_aph"], "act": "同环节只买最强的"}, {"no": "⑥", "t": "服务器整机", "s": "内部分化", "lamp": "mix", "txt": "工业富联 +5.7% vs 浪潮信息 −14.0%", "c": ["601138", "000977"], "u": ["gb_jbl", "gb_cls", "gb_anet", "gb_csco", "gb_ibm"], "act": "富联=国外绳／浪潮=国内电"}, {"no": "⑦", "t": "供电/液冷", "s": "外围已启动·A股未动", "lamp": "watch", "txt": "Vertiv +14.8%、Eaton +8.2%；英维克 5日 −6.0%", "c": ["002837", "002335"], "u": ["gb_vrt", "gb_etn"], "act": "候选。但必须过反向检验"}, {"no": "⑧", "t": "电力", "s": "高位·该卖", "lamp": "sell", "txt": "长江电力距60日高仅 0.9%、区间位 99%", "c": ["600900", "601985", "600795"], "u": ["gb_vst", "gb_tln", "gb_ceg", "gb_gev", "gb_duk", "gb_so", "gb_nee", "gb_aep", "gb_bep", "gb_fslr"], "act": "外围涨≠A股该涨。逻辑不同且已在高位"}, {"no": "⑨", "t": "电网/储能/光伏", "s": "未启动", "lamp": "cold", "txt": "科士达 5日−4.3%、阳光电源 −7.4%", "c": ["002518", "300274"], "u": ["gb_etn", "gb_gev", "gb_fslr"], "act": "位置低但没信号。等"}], "ETF": [{"c": "sz159611", "n": "电力ETF 广发", "x": -1.43, "px": 1.031}, {"c": "sh561560", "n": "电力ETF 华泰柏瑞", "x": -1.34, "px": 1.253}, {"c": "sz159625", "n": "绿色电力ETF 嘉实", "x": -1.33, "px": 1.188}, {"c": "sh515790", "n": "光伏ETF 华泰柏瑞", "x": 1.26, "px": 0.643}, {"c": "sz159755", "n": "电池ETF 广发", "x": 1.44, "px": 0.703}, {"c": "sz159890", "n": "云计算ETF 招商", "x": 2.26, "px": 1.315}, {"c": "sh516510", "n": "云计算ETF 易方达", "x": 2.33, "px": 1.275}, {"c": "sz159819", "n": "人工智能ETF 易方达", "x": 2.5, "px": 1.272}, {"c": "sz159995", "n": "芯片ETF 华夏", "x": -0.12, "px": 0.813}, {"c": "sh512480", "n": "半导体ETF 国联安", "x": 0.4, "px": 0.748}, {"c": "sh588200", "n": "科创芯片ETF 嘉实", "x": 0.86, "px": 0.822}, {"c": "sz159516", "n": "半导体设备ETF 国泰", "x": -0.78, "px": 0.509}, {"c": "sh515880", "n": "通信ETF 国泰", "x": 5.25, "px": 0.381}, {"c": "sh513330", "n": "恒生互联网ETF 华夏", "x": 0.72, "px": 0.281}], "tsA": "2026-11-23", "tsU": "2026-11-23 23:31 北京 / 美东 10:31"}, A=D.A, POS=D.POS;
+const POSN={n:'（请在交易看板填你的持仓）',code:'sz000000',qty:0,cost:0,px:0,prev:0};
+const TOT=0;
+const LV=[{px:1.120,n:'示例·整数关',t:'bad'},{px:1.100,n:'示例·硬死线',t:'bad'},{px:1.080,n:'示例·前低',t:'bad'},
+ {px:1.130,n:'示例·MA5',t:'wn'},{px:1.150,n:'示例·MA10',t:'wn'},{px:1.160,n:'示例·反弹减仓区',t:'wn'}];
+const ORD=[
+ {px:'≥你的卖出线',a:'卖 N 股',n:'示例：涨到 MA5 附近就减一档，不加时间条件',g:'wn'},
+ {px:'≥下一档',a:'卖 N 股',n:'示例：MA10 / 反弹减仓区',g:'wn'},
+ {px:'≤你的死线',a:'卖 N 股',n:'示例：破了就走，不看理由',g:'up'},
+ {px:'≤最后防线',a:'清仓',n:'示例：硬死线，破了必须走',g:'up'}];
+const ACTS=[
+ '涨到你的卖出线 → 按条件单执行（别手动追）',
+ '跌破你的死线 → 同样执行（不加时间条件）',
+ '🚫 当天涨得最好的方向一个都不要追'];
+const CLOCK=[
+ {n:'红利防御链',lamp:'d-sell',s:'高位·正在塌方',d:'银行ETF 位14%、红利低波位8%、工行−2.66%、建行−2.90%、茅台−3.15%',a:'不碰。跌出区间位 30% 以下再看'},
+ {n:'AI 算力链',lamp:'d-hot',s:'超跌反弹中',d:'光模块 60日 −56~59%、区间位 0%，但 5日 +2~+8.7% 已转正；PCB 沪电 +11.8%',a:'最强、最挤、最容易接盘。不是现在买的位置'},
+ {n:'电力资源链',lamp:'d-sell',s:'高位·外围新叙事',d:'长江电力 60日 +12.1%、距60日高仅 0.9%、区间位 99%；中国核电 98%',a:'外围电力涨 ≠ A股电力该涨。两个逻辑，且已在高位'},
+ {n:'宽基 Beta',lamp:'d-cold',s:'中性·跟所有链都不亲',d:'宽基是所有链的加权平均 → 涨涨一点、跌跌一点',a:'这就是「跟涨不跟」的原因。想押某条链要用对应 ETF'}];
+const CAL=[
+ ['11/24','','<b class="or">明天＝条件单执行日</b>（按你自己写死的条件单执行）'],
+ ['11/25 05:00','纽约联储威廉姆斯讲话','美联储口径'],
+ ['11/25','美国 10 月 PCE','<b class="up">本轮最硬的雷</b>（12月加息25bp仍为基准）'],
+ ['11/26','美股感恩节休市','本周仅 3 个完整交易日'],
+ ['11/27','美股提前半天收市','次日 01:00 北京时间收'],
+ ['11/30','融资保证金比例 80% 正式生效','释放近 4000 亿'],
+ ['12/06','创业板做市商细则意见截止','交易所'],
+ ['12/07','恒生科技成分股 30→50','新增中际旭创、宁德时代'],
+ ['12月','美联储议息','超预期加息：外贸出口承压']];
+const LAMPCLS={hot:['d-hot','or'],watch:['d-watch','wn'],cold:['d-cold','ac'],mix:['d-pu'==''?'':'d-mix','pu'],sell:['d-sell','mu'],src:['d-src','gd']};
+function f2(x){if(x===null||x===undefined||isNaN(x))return '—';return (x>=0?'+':'')+x.toFixed(2)+'%';}
+function f1(x){if(x===null||x===undefined||isNaN(x))return '—';return (x>=0?'+':'')+x.toFixed(1)+'%';}
+function cl(x){if(x===null||x===undefined||isNaN(x))return 'dim';return x>0?'up':(x<0?'dn':'mu');}
+function el(id){return document.getElementById(id);}
+function calc(){
+ const mv=POSN.qty*POSN.px, pl=(POSN.px-POSN.cost)*POSN.qty;
+ const ta=TOT+pl; return {mv:mv,pl:pl,ta:ta,pos:mv/ta*100,cash:ta-mv};
+}
+function renderHero(){
+ if(!POSN.qty){
+  el('px').textContent='—'; el('pxsub').textContent='把你的持仓填到「交易看板 · 价位」页，这里会自动同步';
+  ['k_qty','k_cost','k_pl','k_pos'].forEach(i=>{el(i).textContent='—';el(i).className='v';});
+  el('dists').innerHTML='<div class="drow"><span class="dn" style="flex:1">示例价位（价格请按你自己的标的自填）</span></div>';
+  return;
+ }
+ const c=calc();
+ el('px').textContent=POSN.px.toFixed(3);
+ el('px').className='bigpx '+(POSN.px>=POSN.prev?'up':'dn');
+ el('pxsub').innerHTML='159338 中证A500ETF ｜ 前收 '+POSN.prev.toFixed(3)+' ｜ 额 49.4亿 ｜ 换手 17.71% ｜ 区间位 79%';
+ el('k_qty').textContent=POSN.qty+' 股';
+ el('k_cost').textContent=POSN.cost.toFixed(3);
+ el('k_pl').textContent=(c.pl>=0?'+':'')+c.pl.toFixed(2);
+ el('k_pl').className='v '+(c.pl>=0?'up':'dn');
+ el('k_pos').textContent=c.pos.toFixed(1)+'%';
+ el('k_pos').className='v '+(c.pos>60?'up':(c.pos>50?'wn':'gd'));
+ let h='';
+ LV.forEach(l=>{
+  const diff=(l.px-POSN.px)/POSN.px*100;
+  const above=l.px>POSN.px;
+  const w=Math.min(100,Math.abs(diff)/3.5*100);
+  const col=l.t==='bad'?'var(--up)':'var(--wn)';
+  h+='<div class="drow"><span class="dn">'+l.n+'</span>'+
+    '<span class="dv '+cl(-diff)+'">'+(above?'':'')+(diff>=0?'+':'')+diff.toFixed(2)+'%</span>'+
+    '<span class="bar"><i style="width:'+w+'%;background:'+col+'"></i></span></div>';
+ });
+ el('dists').innerHTML=h;
+}
+function renderActs(){
+ let h='';
+ ACTS.forEach((a,i)=>{h+='<div class="act"><span class="n">'+(i+1)+'</span><span>'+a+'</span></div>';});
+ el('acts').innerHTML=h;
+}
+function renderClock(){
+ let h='';
+ CLOCK.forEach(c=>{
+  h+='<div class="cbox"><div class="ct"><span class="dot '+c.lamp+'"></span>'+c.n+'</div>'+
+   '<div class="cs '+c.lamp.replace('d-','')+'">'+c.s+'</div>'+
+   '<div class="cx">'+c.d+'</div><div class="cx"><b>动作：</b>'+c.a+'</div></div>';
+ });
+ el('clockbox').innerHTML=h;
+}
+function renderLamps(){
+ let h='';
+ D.RINGS.forEach(r=>{
+  const cc=LAMPCLS[r.lamp]||['d-cold','ac'];
+  const cn=r.c.map(c=>{
+   const a=A[c];if(!a)return '';
+   return a.name+' <b class="'+cl(a.r5)+'">'+f1(a.r5)+'</b>';
+  }).join(' ｜ ');
+  const un=r.u.map(u=>{
+   const o=D.USLIVE.find(x=>x[0]===u);if(!o)return '';
+   return o[1]+' <b class="'+cl(o[3])+'">'+f1(o[3])+'</b>';
+  }).join(' ｜ ');
+  h+='<div class="lamp"><div class="lt"><span class="dot '+cc[0]+'"></span>'+r.no+' '+r.t+'</div>'+
+   '<div class="ls '+cc[1]+'">'+r.s+'</div>'+
+   '<div class="lx">'+r.txt+'</div>'+
+   (cn?'<div class="lx" style="color:var(--tx)">A股：'+cn+'</div>':'')+
+   (un?'<div class="lx" style="color:var(--tx)">美股：'+un+'</div>':'')+
+   '<div class="lx"><b style="color:var(--or)">动作：</b>'+r.act+'</div></div>';
+ });
+ el('lamps').innerHTML=h;
+}
+function renderUS(){
+ let h='';
+ D.USLIVE.forEach(u=>{
+  let rd='';
+  if(u[3]>15)rd='<b class="up">暴涨</b>';
+  else if(u[3]>6)rd='<b class="up">大涨</b>';
+  else if(u[3]>0)rd='<span class="up">上涨</span>';
+  else if(u[3]<-0.5)rd='<b class="dn">下跌</b>';
+  else rd='<span class="mu">平淡</span>';
+  h+='<tr><td>'+u[1]+'</td><td class="mu">'+u[2]+'</td><td class="num '+cl(u[3])+'">'+f1(u[3])+'</td><td>'+rd+'</td></tr>';
+ });
+ el('usbody').innerHTML=h;
+}
+function renderOrd(){
+ let h='';
+ ORD.forEach(o=>{
+  h+='<div class="ord"><span class="px '+o.g+'">'+o.px+'</span><span class="a">'+o.a+'</span><span class="n">'+o.n+'</span></div>';
+ });
+ el('ords').innerHTML=h;
+}
+function renderETF(){
+ let h='';
+ D.ETF.forEach(e=>{
+  const lot=e.px*100, ok=lot<=1000;
+  h+='<tr><td>'+e.n+'</td><td class="num">'+e.px.toFixed(3)+'</td><td class="num '+cl(e.x)+'">'+f2(e.x)+'</td>'+
+   '<td class="num">'+lot.toFixed(0)+' 元</td><td class="num '+(ok?'gd':'dn')+'">'+(ok?'✅':'❌')+'</td></tr>';
+ });
+ el('etfbody').innerHTML=h;
+}
+function renderCal(){
+ let h='';
+ CAL.forEach(c=>{h+='<tr><td class="mono">'+c[0]+'</td><td>'+c[1]+'</td><td>'+c[2]+'</td></tr>';});
+ el('calbody').innerHTML=h;
+}
+function marketClock(){
+ const n=new Date(),d=n.getDay(),h=n.getHours(),m=n.getMinutes(),t=h*60+m;
+ if(d===0||d===6)return '休市（周末）';
+ if(t<9*60+15)return '盘前 '+String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+ if(t<9*60+25)return '竞价中';
+ if(t<11*60+30)return '早盘';
+ if(t<13*60)return '午间休市';
+ if(t<15*60)return '午盘';
+ return '已收盘';
+}
+function setClock(){el('clock').textContent=marketClock();}
+function copyOrd(btn){
+ const txt=ORD.map(o=>o.px+'  '+o.a+'  ｜ '+o.n).join('\n')+'\n自动买入：不设（买完占总资产>50%一律不买）';
+ navigator.clipboard.writeText(txt).then(()=>{btn.textContent='✅ 已复制';setTimeout(()=>btn.textContent='📋 一键复制条件单',1800);});
+}
+function saveRv(btn){try{localStorage.setItem('board_rv',el('rv').value);btn.textContent='✅ 已保存';setTimeout(()=>btn.textContent='💾 保存',1600);}catch(e){btn.textContent='⚠ 存不了';}}
+function copyRv(btn){navigator.clipboard.writeText(el('rv').value).then(()=>{btn.textContent='✅ 已复制';setTimeout(()=>btn.textContent='📋 复制',1600);});}
+function exportAll(){try{const d='# 复盘 '+(new Date().toLocaleString('zh-CN'))+'\n\n'+el('rv').value;const b=new Blob([d],{type:'text/markdown'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='复盘-'+new Date().toISOString().slice(0,10)+'.md';a.click();}catch(e){alert('导出失败');}}
+function refresh(){
+ const btn=document.querySelector('header .btn');btn.textContent='⟳ 拉取…';
+ const codes=['sz159338','sz159611','sh561560','sz159625','sh515790','sz159755','sz159890','sh516510','sz159819','sz159995','sh512480','sh588200','sz159516','sh515880'];
+ const s=document.createElement('script');
+ s.src='https://qt.gtimg.cn/q='+codes.join(',')+'&_='+Date.now();
+ s.onload=function(){
+  try{
+   const F={};codes.forEach(c=>{const raw=window['v_'+c];if(!raw)return;const f=raw.split('~');if(f.length<40)return;
+     F[c]={px:parseFloat(f[3]),chg:parseFloat(f[32]),hi:parseFloat(f[33]),lo:parseFloat(f[34]),turn:parseFloat(f[38])};});
+   if(F.sz159338){POSN.px=F.sz159338.px;POSN.prev=F.sz159338.px/(1+F.sz159338.chg/100);}
+   D.ETF.forEach(e=>{if(F[e.c]){e.px=F[e.c].px;e.x=F[e.c].chg;}});
+   renderHero();renderETF();
+   const t=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
+   el('upd').textContent='更新于 '+t;
+   btn.textContent='✓ '+t;setTimeout(()=>btn.textContent='⟳ 刷新',2200);
+  }catch(e){btn.textContent='⚠ 失败';}
+  if(s.parentNode)document.head.removeChild(s);
+ };
+ s.onerror=function(){btn.textContent='⚠ 网络受限';if(s.parentNode)document.head.removeChild(s);};
+ document.head.appendChild(s);
+}
+try{el('rv').value=localStorage.getItem('board_rv')||'';}catch(e){}
+el('env').textContent='政策见效 · 成长反攻 · 等减仓';
+el('ts').innerHTML='A股 '+D.tsA+' 收盘 ｜ 美股 '+D.tsU;
+renderHero();renderActs();renderClock();renderLamps();renderUS();renderOrd();renderETF();renderCal();setClock();
+setInterval(setClock,20000);
+</script>
+</body>
+</html>

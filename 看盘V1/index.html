@@ -242,7 +242,7 @@ details.fold.todo-fold .dot{animation:none}
  <div class="hrow">
   <div class="brand">
    <div class="logo">交易看板 <span>BOE·A500</span></div>
-   <div class="sub" id="dateline">数据：<b class="mono">11-16 13:26 盘中</b>｜ <b class="ac">持仓与价位请在「价位」页填写（只存你本地）</b> ｜ 创业板 <span class="bad">−3.14% 位9%</span>、银行ETF <span class="up">+1.34% 位93%</span>（护盘在极致）</div>
+   <div class="sub" id="dateline">行情快照 <b class="mono">11-23 收盘</b>｜<b class="ac">持仓与价位请在「价位」页填写（只存你本地）</b>｜ <b class="ac">持仓与价位请在「价位」页填写（只存你本地）</b> ｜ 创业板 <span class="bad">−3.14% 位9%</span>、银行ETF <span class="up">+1.34% 位93%</span>（护盘在极致）</div>
   </div>
   <div class="spacer"></div>
   <div class="kpis" id="kpis"></div>
@@ -307,24 +307,35 @@ details.fold.todo-fold .dot{animation:none}
    <div class="row"><span class="lab">第 3 步 · 临界点</span><span class="val" style="text-align:left">算出<b class="bad">「加仓方案在哪一个价位以下开始变差」</b>，再和你的死线比。如果临界点比死线还低，说明<b>加仓逻辑已经失效</b>。</span></div>
    <div class="foot"><b>用你自己的数字填一遍：</b>持仓在「价位」页填好成本和数量后，上面三步就能自动算给你看。三个数字一摆出来，答案通常不需要讨论。</div>
   </div>
-  <div class="card"><h3>🔭 下午盯盘顺序（13:00–15:00）· 13:26 已更新</h3>
-   <div class="row"><span class="lab">⚠️ 尾盘判据</span><span class="val"><b class="bad">已失效</b>：上证 3608.12 &lt; 3615、159338 1.026 &lt; 1.028 → <b>按规则明日再减 100 股</b></span></div>
-   <div class="row"><span class="lab">① 中际旭创</span><span class="val">现 427.09，<b class="bad">−8.39% 位10%</b>，最低 424 <b>已触及</b></span></div>
-   <div class="row"><span class="lab">② 红利是否扛住</span><span class="val">银行ETF +1.34% 位 <b>93%</b>｜红利低波 +1.04% 位89%｜建行 +1.82% 位92%｜工行 +1.69%</span></div>
-   <div class="row"><span class="lab">③ 159338 位置</span><span class="val" id="w_avg">—</span></div>
-   <div class="row"><span class="lab">④ 159338 委比</span><span class="val"><b class="gd">+89%</b>（买一 62.5 万 / 卖一 3.5 万）→ 有人接</span></div>
-   <div class="row"><span class="lab">⑤ 上证 3593</span><span class="val">现 3608.12；<b>破 3593 = 偏弱档坐实</b></span></div>
-   <div class="row"><span class="lab">⑥ 涨跌停</span><span class="val">涨停 32 / 跌停 12（午盘 33/14）→ 恐慌在减轻</span></div>
-   <div class="foot"><b>铁律：只做条件单里写好的动作，不做新决策。</b>何志坚：这种精细化博弈很难做。</div></div>
-  <div class="card"><h3>📉 今日全景（11/16 13:26）</h3>
-   <div class="row"><span class="lab">上证 / 创业板</span><span class="val mono">3608.12 <span class="dn">−0.72%</span> 位49% / <span class="dn">−3.14%</span> 位 <b class="bad">9%</b></span></div>
-   <div class="row"><span class="lab"><b>社零 / 固投 / 出口</b></span><span class="val mono"><span class="bad">+0.4%</span> / <span class="bad">−8.1%</span> / <span class="up">+31.2%</span></span></div>
-   <div class="row"><span class="lab">159338</span><span class="val mono">1.026 <span class="dn">−1.06%</span> 位36%｜低 1.022｜<b class="bad">换手 16.84%（放量）</b></span></div>
-   <div class="row"><span class="lab">涨停 / 跌停</span><span class="val mono"><span class="up">32</span> / <span class="bad">12</span>（昨 37/33）→ 恐慌在减轻</span></div>
-   <div class="row"><span class="lab">算力链</span><span class="val mono dn">中际 −8.39% 位10%｜新易盛 −7.52%｜天孚 −7.90% 位8%｜工业富联 −7.53% 位2%</span></div>
-   <div class="row"><span class="lab">防御（贴顶了）</span><span class="val mono up">银行ETF +1.34% 位 <b>93%</b>｜红利低波 位89%｜建行 +1.82% 位92%</span></div>
-   <div class="row"><span class="lab">两端都在边际</span><span class="val"><b class="bad">成长贴地 9%</b>（创业板）｜<b class="bad">红利贴顶 93%</b>（银行ETF）→ 护盘到极致 = 一旦红利回落就没了支撑</span></div>
-   <div class="foot"><b>👉 放量下跌 + 两端贴边。减仓优先，别在退潮期摊平。</b></div></div>
+  <div class="card"><h3>🔭 明日盯盘顺序 · 模板（价位填在「价位」页）</h3>
+   <div class="row"><span class="lab">⚠️ 今晚变量</span><span class="val"><b class="up">美股暴涨</b>：纳指 +5.41%、费半 +12.21%、英伟达 +25.83% → 明天 A 股科技链大概率高开。<b class="bad">但形态是「开盘即最高、开盘 10 分钟已在回吐」</b></span></div>
+   <div class="row"><span class="lab">① 09:25 竞价</span><span class="val">看你要买卖的那个标的开盘价 → <b>对照你写好的条件单</b>，触发就执行，<b>不改价、不加戏</b></span></div>
+   <div class="row"><span class="lab">② 开盘 15 分钟</span><span class="val">看主线是「普涨」还是「独强」：只有光模块/存储强、芯片设备继续掉队 → <b>是题材不是板块，别追</b></span></div>
+   <div class="row"><span class="lab">③ 红利是否续跌</span><span class="val">银行ETF 0.916 <b class="bad">−1.08% 位14%</b>｜红利低波 1.256 <b class="bad">−1.18% 位8%</b> → <b>红利塌方 = 资金在搬家，不是在避险</b></span></div>
+   <div class="row"><span class="lab">④ 涨跌停/量能</span><span class="val">昨：涨停 146 / 跌停 3｜两市 1.5529 万亿。<b>若涨停数腰斩 + 缩量 = 高开低走</b></span></div>
+   <div class="row"><span class="lab">⑤ 收盘判据</span><span class="val">收在你写死的卖出线上方 = 反弹延续｜<b>收在下方 = 反弹失败，按规则继续减</b></span></div>
+   <div class="foot"><b>铁律：只做条件单里写好的动作，不做新决策。</b>何志坚：这种精细化博弈很难做。<b>外围暴涨不是加仓理由，是减仓理由。</b></div></div>
+  <div class="card"><h3>📉 隔夜全景 · 美股（上周五崩 → 周一开盘实况）</h3>
+   <div class="row"><span class="lab"><b>上周五 11/20</b></span><span class="val mono"><b class="bad">道指 −1.93%（连跌5天）｜标普 −3.70%（连跌7天，2020年来最长）｜纳指 −5.28%（抹去年内全部涨幅）｜费半 −11%</b></span></div>
+   <div class="row"><span class="lab">英伟达</span><span class="val mono dn"><b>−14.01% → 125.53</b>（18个月新低，较10/6高点近腰斩；7个交易日 173.73→125.53 = <b>−27.7%</b>）</span></div>
+   <div class="row"><span class="lab">周线</span><span class="val mono dn">道指 −8.02%｜标普 −8.61%｜纳指 −10.02%｜纳指100 −10.43%｜<b>2008年以来最大单周跌幅</b></span></div>
+   <div class="row"><span class="lab"><b>⚡ 开盘实况</b></span><span class="val mono up">（北京 22:41 / 美东 09:41，开盘10分钟）纳指 <b>+5.41%</b>｜标普 +3.65%｜道指 +1.90%｜<b>费半SOX +12.21%</b>｜<b>英伟达 +25.83%</b>（开盘曾 <b>+33.17%</b>）｜台积电 +14.10%｜美光 +13.80%｜Lumentum +20.29%｜Coherent +19.34%｜特斯拉 +11.80%</span></div>
+   <div class="row"><span class="lab">结构分化</span><span class="val mono">强：光模块/存储/代工全线暴涨｜弱：<b class="dn">博通仅 +1.54%（开 +6.58%，回吐最狠）</b>、苹果 +1.13%、谷歌 +3.74%｜→ <b>AI 硬件内部「光模块+存储+代工」强，「ASIC/消费电子」弱</b></span></div>
+   <div class="row"><span class="lab"><b>⚠️ 形态</b></span><span class="val mono dn"><b>普遍「开盘即最高、开盘10分钟已在回吐」</b>：纳指区间位 1%、标普 0%、道指 0%、费半 12%、英伟达 1%（距开盘 −5.52%）</span></div>
+   <div class="row"><span class="lab"><b>电力分化</b></span><span class="val mono"><b class="up">AI 供电链（涨）：</b>GE Vernova +8.50%｜Talen +8.27%｜Vistra +7.35%｜Constellation +6.03%　｜　<b class="dn">传统公用事业（跌）：</b>杜克 −1.43%｜南方 −1.01%｜新纪元 −0.54%｜美国电力 +0.36%<br><span class="mu">→ 连「防御」内部都劈叉了：钱在从传统防御搬到 AI 成长，不是有人在买防御。对应 A 股＝中国核电 601985（核电占比高）</span></span></div>
+   <div class="row"><span class="lab">中概/港股</span><span class="val mono up">中概金龙 <b>+1.68%</b>｜KWEB +2.46%｜阿里 +5.71%｜拼多多 +0.05%｜<b class="wn">恒指期货仅 +0.64%</b>（港股整体没跟上，只有中概强）</span></div>
+   <div class="row"><span class="lab"><b>今晚盘前</b></span><span class="val mono up">纳指期货 <b>+3.44%</b>｜标普期货 +2.59%｜道指期货 +1.9%｜3倍做多半导体ETF <b>+17.40%</b></span></div>
+   <div class="row"><span class="lab">AI 硬件盘前</span><span class="val mono up">英伟达 <b>+7.8~9%</b>｜台积电 +6.96%｜SK海力士 +9.15%｜希捷 +8.31%｜美光 +7.48%｜闪迪 +7.28%｜博通 +5.30%｜Lumentum +6.77%｜Coherent +6.56%｜应用材料 +6.60%｜泛林 +7.00%｜AMD +6.23%</span></div>
+   <div class="row"><span class="lab">大科技盘前</span><span class="val mono up">特斯拉 +4.66%｜谷歌 +4.37%｜亚马逊 +3.72%｜Meta +3.26%｜微软 +2.83%｜苹果 +1.50%｜甲骨文 +5%</span></div>
+   <div class="row"><span class="lab"><b>催化①</b></span><span class="val" style="text-align:left">美财长贝森特周日：<b>「我之前说他们应该从外部找人，但黄仁勋现在不就是外部人士吗？」</b>特朗普亦公开支持其回归 → <b>预测市场：黄仁勋回归概率 10%→18%，升至第二热门（仅落后 Arm CEO Haas 1pct）</b></span></div>
+   <div class="row"><span class="lab"><b>催化②</b></span><span class="val" style="text-align:left">掉期市场<b>已不再完全押注 12 月加息 25bp</b>；贝森特警告过度收紧「可能面临政策失误」；资金涌入美债避险</span></div>
+   <div class="row"><span class="lab">机构分歧</span><span class="val" style="text-align:left"><b class="up">大摩威尔逊：</b>「绝佳买入机会」主动加仓｜<b class="wn">高盛斯奈德：</b>筑底三条件（AI变现信心/鸽派/仓位出清）<b>一个都没满足</b>，ETF月净流入1700亿、期货多头<b>第82百分位</b>，清洗远未完成｜<b class="down">小摩泰勒：</b>转向谨慎，「反弹能到来，但尚不能确信演变为持续上涨」</span></div>
+   <div class="row"><span class="lab">⚠️ 本周日程</span><span class="val mono"><b>11/25 美国10月PCE + 05:00 威廉姆斯讲话</b>｜<b>11/26 感恩节休市</b>｜11/27 提前半天收市 → <b>本周只有 3 个完整美股交易日</b></span></div>
+   <div class="foot"><b>👉 结论（开盘10分钟后修正）：反弹成色比盘前预期更强（纳指一次性收复上周五全部跌幅），但形态是「高开即高点、开盘即回吐」，且本周只有3天、11/25 还有 PCE。</b><br>
+   ① <b>对 11/24 A 股</b>：光模块 / 存储 / 算力大概率高开最强，芯片设备与消费电子偏弱 —— 与 11/23 <b>完全同构</b>（天孚 +13.8%、新易盛 +9.9%、中际 +6.1% 涨，北方华创 −6.6% 跌）。<br>
+   ② <b>明天最可能的路径：高开 → 早盘冲高 → 上午回落</b>。因为这是「<b>连续第二天冲高</b>」，而上周五的恐慌今晚已被一次性抹平（纳指 −5.28% → +5.41%）。<br>
+   ③ <b>动作不改，而且更有利</b>：你预先写好的<b>「涨到卖出线就减仓」条件单</b>，大概率先被自动触发。<b>绝不能因为今晚美股暴涨就想加仓</b> —— 闸门是「买完这个标的占总资产 &gt;50% 一律不买」。</div>
+  </div>
   <div class="card"><h3>📅 本周剩余日历</h3>
    <div class="row"><span class="lab"><b>11/16 下午</b></span><span class="val">央行 2000 亿买断式逆回购落地（缩量续作 1000 亿）｜4600 亿隔夜逆回购已开展</span></div>
    <div class="row"><span class="lab"><b>11/17 盘后</b></span><span class="val bad"><b>英伟达 Q3 财报 = 本周判决日</b>（黄仁勋辞任后首份）</span></div>
@@ -348,9 +359,9 @@ details.fold.todo-fold .dot{animation:none}
  <div class="grid g2">
     <div class="card lay4"><h3>159338 中证A500ETF <span class="n" id="px_now">—</span></h3>
    <div class="tw sticky deskonly" style="border:none"><table><thead><tr><th>类型</th><th>价位</th><th>依据</th><th>动作</th></tr></thead><tbody>
-    <tr style="background:rgba(248,81,73,.07)"><td><b>示例·死线</b></td><td class="mono up">1.040</td><td>你自定义的「跌到这儿就撤」的线</td><td class="bad"><b>破了就减</b></td></tr>
-    <tr><td><b>示例·硬死线</b></td><td class="mono up">1.008</td><td>最后防线。<b>要设在 1.5–2 倍日振幅之外</b>，否则必被日内噪音洗掉</td><td class="bad">破了就走</td></tr>
-    <tr><td><b>示例·反弹减仓区</b></td><td class="mono up">1.040–1.045</td><td>涨到这主动兑现，不是被迫砍</td><td class="wn">减 100–200 股</td></tr>
+    <tr style="background:rgba(248,81,73,.07)"><td><b>示例·死线</b></td><td class="mono up">1.120</td><td>你自定义的「跌到这儿就撤」的线</td><td class="bad"><b>破了就减</b></td></tr>
+    <tr><td><b>示例·硬死线</b></td><td class="mono up">1.100</td><td>最后防线。<b>要设在 1.5–2 倍日振幅之外</b>，否则必被日内噪音洗掉</td><td class="bad">破了就走</td></tr>
+    <tr><td><b>示例·反弹减仓区</b></td><td class="mono up">1.120–1.125</td><td>涨到这主动兑现，不是被迫砍</td><td class="wn">减 100–200 股</td></tr>
     <tr><td>示例·加仓区</td><td class="mono up">—</td><td>需同时：换手&lt;18% + 权重健康度转好 + 守住死线</td><td class="dim">三条缺一不买</td></tr>
     <tr><td>均线</td><td class="mono">MA5 / MA10</td><td>价在线下 = 趋势仍弱</td><td class="wn">方向未决</td></tr>
     <tr><td>估值</td><td class="mono">PE 与近 1 年分位</td><td>分位越低越接近低估区</td><td class="wn">看分位不看绝对值</td></tr>
@@ -400,8 +411,8 @@ details.fold.todo-fold .dot{animation:none}
    <div class="hint">为什么必须查：中概互联是跨境 ETF，溢价会随情绪剧烈波动。今天 +1.61% 的反弹是<b>港股回购扩容</b>驱动，不是英伟达 —— 这种「无基本面催化的情绪反弹」最容易出现<b>溢价快速抬升</b>，追进去就是替别人接盘。</div></div></div>
  <div class="card" style="margin-top:12px">  <h3>🧮 一眼记住的四组数字</h3>
   <div class="grip">
-   <div class="mini"><div class="k">我的死线 / 硬死线</div><div class="v mono bad" id="mini_lv">示例 1.040 / 1.008</div></div>
-   <div class="mini"><div class="k">我的反弹减仓区</div><div class="v mono wn" id="mini_rb">示例 1.040–1.045</div></div>
+   <div class="mini"><div class="k">我的死线 / 硬死线</div><div class="v mono bad" id="mini_lv">示例 1.120 / 1.100</div></div>
+   <div class="mini"><div class="k">我的反弹减仓区</div><div class="v mono wn" id="mini_rb">示例 1.120–1.125</div></div>
    <div class="mini"><div class="k">A500 换手率（半日）</div><div class="v mono gd">13.58%</div></div>
    <div class="mini"><div class="k">单标的仓位上限</div><div class="v mono wn">≤50%（写死）</div></div></div>
    <div class="foot"><b>把这四个数字改成你自己的 →</b> 点「我的设置」保存，之后首页距离条、盯盘模式全部跟着变。数据只存在你本机浏览器。</div></div>
@@ -412,12 +423,12 @@ details.fold.todo-fold .dot{animation:none}
   <div id="orders"></div><div class="foot">全部勾选完成后，把这一屏截图存进手机相册 —— 那就是你的交易纪律。</div></div>
  <div class="card" style="margin-top:12px">      <h3>🚦 触发状态实时对照（11/16 13:26）</h3>
   <div class="tw sticky"><table><thead><tr><th>条件</th><th>触发价</th><th>13:26 实际</th><th>状态</th></tr></thead><tbody>
-   <tr><td>死线（示例）</td><td class="mono">&lt;1.040</td><td class="mono">最低 <b>1.022</b> ✅</td><td class="mono bad"><b>已破 → 减 100 股</b></td></tr>
-   <tr><td>硬死线（示例）</td><td class="mono">&lt;1.008</td><td class="mono">现 1.026</td><td class="mono wn">未破</td></tr>
-   <tr><td>反弹减仓（示例）</td><td class="mono">≥1.040</td><td class="mono">高 1.033</td><td class="mono dim">未触发</td></tr>
-   <tr><td>今日低点（示例）</td><td class="mono">&lt;1.018</td><td class="mono">现 1.026</td><td class="mono wn">一步之遥</td></tr>
+   <tr><td>死线（示例）</td><td class="mono">&lt;1.120</td><td class="mono">最低 <b>1.113</b> ✅</td><td class="mono bad"><b>已破 → 减 100 股</b></td></tr>
+   <tr><td>硬死线（示例）</td><td class="mono">&lt;1.100</td><td class="mono">现 1.122</td><td class="mono wn">未破</td></tr>
+   <tr><td>反弹减仓（示例）</td><td class="mono">≥1.120</td><td class="mono">高 1.121</td><td class="mono dim">未触发</td></tr>
+   <tr><td>今日低点（示例）</td><td class="mono">&lt;1.105</td><td class="mono">现 1.122</td><td class="mono wn">一步之遥</td></tr>
    <tr><td>尾盘判据①（示例）</td><td class="mono">上证 ≥3615</td><td class="mono">现 <b>3602.57</b></td><td class="mono bad"><b>已失效</b></td></tr>
-   <tr><td>尾盘判据②（示例）</td><td class="mono">A500 ≥1.028</td><td class="mono">现 <b>1.024</b></td><td class="mono bad"><b>已失效</b></td></tr>
+   <tr><td>尾盘判据②（示例）</td><td class="mono">A500 ≥1.028</td><td class="mono">现 <b>1.118</b></td><td class="mono bad"><b>已失效</b></td></tr>
    <tr><td>仓位</td><td class="mono">单标的 ≤50%</td><td class="mono" id="row_pos">—</td><td class="mono" id="row_pos2">—</td></tr>
    <tr><td>事件提醒</td><td class="mono">财报日</td><td class="mono">财报前不留仓</td><td class="mono ac">待触发</td></tr>
   </tbody></table></div></div>
@@ -440,7 +451,7 @@ details.fold.todo-fold .dot{animation:none}
   <div class="card"><h3>④ 交易日志（四栏）</h3>
    <textarea id="r_log" placeholder="日期 | 标的 | 动作 | ①入场理由(三段式) | ②离场条件(四触发) | 实际动作 | ④是否按规则执行 □是□否
 
-例：11/10 | 513050 | 买100@1.006 | 跨市场/T+0纠错/隔夜金龙跌 | 0.975止损 | 买100 | □是"></textarea>
+例：11/10 | 标的 | 买100@X.XXX | 跨市场/T+0纠错/隔夜金龙跌 | 0.975止损 | 买100 | □是"></textarea>
    <div class="hint"><b>第四栏最重要</b> —— 盈亏是结果，纪律是能力。</div></div>
  </div>
  <details class="fold" style="margin-top:12px"><summary>💾 导出 / 备份 / 恢复<span class="fs">复盘数据别只存在手机里</span></summary>
@@ -501,6 +512,24 @@ details.fold.todo-fold .dot{animation:none}
    <tr><td><b>卖出不变成本价</b></td><td>减仓<b>不会</b>推高成本价，只有买入才会。减仓改变的是<b>暴露</b>和<b>浮亏金额</b>，不是成本</td></tr>
    <tr><td><b>摊成本的正确载体</b></td><td>场外联接/定投（1元起投、不用择时、不会跳空）。场内 ETF 是 T+1 + 整手，做不了摊平</td></tr>
   </tbody></table></div></div>
+  <div class="card"><h3>🌍 跨市场对标表（国内 ↔ 美股）· 2026/11/23</h3>
+   <div class="foot" style="margin-bottom:8px"><b>用法：</b>看到 A 股一条链，先找到它的海外同源，再看海外今晚的位置 —— 外盘是「资金和预期」的实时温度计。但 <b class="bad">同源 ≠ 可换算</b>，下面每条都标了重合度。</div>
+   <div class="tw"><table><thead><tr><th>层次</th><th>国内对标</th><th>美股对标</th><th>今晚涨幅</th><th>重合度</th></tr></thead><tbody>
+    <tr style="background:rgba(248,81,73,.07)"><td rowspan="2"><b>① 光纤光缆</b><br><span class="mu">运营商铺的线</span></td><td><b>长飞光纤</b> 601869<br><span class="mu">210.08 PE26.9 1手2.1万❌</span></td><td><b>康宁 Corning</b> GLW<br><span class="mu">108.50</span></td><td class="mono up"><b>+14.96%</b></td><td>★★★★★<br><span class="mu">全球双寡头</span></td></tr>
+    <tr><td>亨通光电 600487 37.00<br>中天科技 600522 21.85</td><td>Prysmian(意)｜Sumitomo 5802.T<br>Nexans｜Amphenol APH</td><td class="mono">—</td><td>★★★★</td></tr>
+    <tr style="background:rgba(248,81,73,.07)"><td rowspan="2"><b>② 光模块/光器件</b><br><span class="mu">800G/1.6T</span></td><td>中际旭创 300308 417.20<br>新易盛 300502 181.36</td><td><b>Coherent</b> COHR｜<b>Lumentum</b> LITE<br>Fabrinet FN｜AAOI</td><td class="mono up">+17.13%<br><b>+20.43%</b><br>+14.45%｜+21.91%</td><td>★★★★<br><span class="mu">同一批 AI 客户</span></td></tr>
+    <tr><td>天孚通信 300394 116.30</td><td>Marvell MRVL(光DSP)｜Ciena CIEN</td><td class="mono up">+19.58%｜+16.55%</td><td>★★★</td></tr>
+    <tr style="background:rgba(248,81,73,.07)"><td><b>③ 玻璃基板/AI光学</b></td><td>水晶光电 002273 21.92<br><span class="mu">已与康宁签NDA、送样</span></td><td><b>康宁 GLW</b><br><span class="mu">英伟达评估玻璃基板方案</span></td><td class="mono up">+14.96%</td><td>★★★★</td></tr>
+    <tr style="background:rgba(248,81,73,.07)"><td rowspan="2"><b>④ 电力</b></td><td>中国核电 601985 9.78<br>长江电力 600900 31.35</td><td>Constellation CEG｜Vistra VST<br>Talen TLN｜GE Vernova GEV</td><td class="mono up">+6.03%｜+7.35%<br>+8.27%｜+8.50%</td><td>★★★★<br><span class="mu">AI供电叙事</span></td></tr>
+    <tr><td>国电电力 600795 5.42<br>国投电力 600886 16.15</td><td>Duke DUK｜Southern SO<br>NextEra NEE｜AEP</td><td class="mono dn">−1.43%｜−1.01%<br>−0.54%｜+0.36%</td><td>★★★<br><span class="mu">传统公用事业</span></td></tr>
+   </tbody></table></div>
+   <div class="row" style="margin-top:9px"><span class="lab">🪜 短线</span><span class="val"><a class="ac" href="ladder.html" style="font-weight:700">→ 打开《A股梯队看板》（情绪坐标 / 连板梯队 / 一字·跟风 / 题材链 / 今日动作）</a><br><span class="mu">短线视角的一套独立工具：先定情绪坐标，再看连板梯队，最后才看个股。每行都给「角色标签 + 为什么涨」。</span></span></div>
+   <div class="row" style="margin-top:9px"><span class="lab">🔗 完整版</span><span class="val"><a class="ac" href="chain.html" style="font-weight:700">→ 打开《产业链地图》（7 层 × 国内电/国外绳 分类 + ETF 一览）</a><br><span class="mu">那张表只解决「国外是什么」，这张地图解决「方向怎么捋」：电力→数据中心→芯片→存储→绳子→服务器→云，每层标清谁是「国外绳」、谁是「国内电」。</span></span></div>
+   <div class="row"><span class="lab">🔗 轮动</span><span class="val"><a class="ac" href="rotate.html" style="font-weight:700">→ 打开《题材轮动图》（九环传导链 + 轮动时钟 + 实测相关性）</a><br><span class="mu">回答「接下来该往哪一环挪」：每环的启动信号、确认信号、当前读数、动作，以及链与链之间资金在往哪搬。</span></span></div>
+   <div class="row"><span class="lab"><b>⚠️ 三个别搞混</b></span><span class="val" style="text-align:left"><b>①「光纤」≠「光模块」。</b>长飞卖的是运营商光缆和数据中心内部布线；美股昨晚暴涨的 Coherent/Lumentum 是给 AI 集群供 800G/1.6T 光模块的 —— <b class="bad">两条线重叠度只有一半，别因为都叫"光"就当成同一件事</b>。<br><b>② 康宁不是纯题材股。</b>2026Q3 核心营收 50.8亿(+19%)、核心EPS 0.91(+36%)、<b>光通信单季 +44% → 23.8亿、板块净利 +80% 创历史新高</b>、企业网络 +84%、生成式AI产品销售额翻倍；Q4 指引 52–53亿。Ciena FY26Q3 营收 16.7亿(+37%)、EPS +215%、<b>在手积压订单 &gt;100亿</b>，12/10 出 Q4 财报。<br><b>③ 电力这条线要看清方向。</b>今晚美股电力<b class="up">内部劈叉</b>：AI 供电链大涨、传统公用事业下跌 —— 连"防御"内部都在分化，说明<b class="bad">是资金搬家，不是有人在买防御</b>。</span></div>
+   <div class="row"><span class="lab"><b>📍 位置对照</b></span><span class="val mono"><b>长飞 601869</b>：60日涨幅 <b class="bad">−44.44%</b>、距60日高 <b class="bad">−55.58%</b>（472.93→210.08）｜<b>康宁 GLW</b>：60日涨幅 −27.04%、距52周高 <b class="bad">−65.27%</b>（271.78→94.38）、RSI14 <b class="up">30.5（超卖）</b>、价格在 MA20/50/200 <b>全下方</b><br><span class="mu">→ <b>两者都是「跌下来的超跌」，不是「涨上来的高位」。但按我们的止跌标准（低点不再下移 + 缩量 + 权重止跌）三条一条都没验证完 → 这是「反弹第一天」，不是「止跌确认」。</b></span></span></div>
+   <div class="foot"><b>💰 现实约束（重要）：</b>这些个股 1 手门槛全部超出小账户 —— 长飞 2.1万 / 中际 4.2万 / 新易盛 1.8万 / 天孚 1.2万 / 水晶光电 2,192 元，<b class="bad">都买不起</b>。能买得起的只有 ETF：<b>515880 通信ETF 0.381（1手38元）✅</b>｜159995 芯片ETF 0.813｜512480 半导体ETF 0.748｜159890 云计算ETF 1.315｜159611 电力ETF 1.031。<br><b>但顺序不能反：</b>① 先把仓位降到「单标的 ≤ 总资产 50%」以内 → ② 再谈加仓，且要过加仓三条件 → ③ <b class="bad">通信ETF 强势当天不追（「日内强势的方向是卖点」）</b>。</div>
+  </div>
   <div class="card"><h3>🗓 事件日历</h3><div class="tw"><table><thead><tr><th>日期</th><th>事件</th><th>影响</th></tr></thead><tbody>
       <tr style="background:rgba(248,81,73,.07)"><td class="mono"><b>11/16 10:00</b></td><td><b>中国 10 月经济数据</b></td><td class="bad">社零 +0.4%、固投 −8.1%</td></tr>
    <tr style="background:rgba(248,81,73,.07)"><td class="mono"><b>11/17 盘后</b></td><td><b>英伟达 Q3 财报</b>（黄仁勋辞任后首份）</td><td class="bad">本周判决日 · AI 硬件链定价</td></tr>
@@ -531,14 +560,14 @@ details.fold.todo-fold .dot{animation:none}
 const D={
  env:"硬死线盘中破了 · 收盘收回", envType:"b-bd", tot:1053.11,
  pos:[
-  {n:"159338 中证A500",code:"sz159338",role:"贝塔底仓",qty:0,cost:0,px:1.024},
+  {n:"159338 中证A500",code:"sz159338",role:"贝塔底仓",qty:0,cost:0,px:1.118},
   {n:"513050 中概互联",code:"sh513050",role:"跨市场 T+0",qty:0,cost:0,px:0.941}
  ],
  px:{
-  sz159338:{px:1.024,chg:-1.25,hi:1.033,lo:1.018,pos:40,turn:21.64},
-  sh512800:{px:0.909,chg:1.34,hi:0.91,lo:0.896,pos:93,turn:7.0},
-  sh512890:{px:1.258,chg:1.04,hi:1.26,lo:1.241,pos:89,turn:1.52},
-  sh518880:{px:7.909,chg:-0.57,hi:7.942,lo:7.894,pos:31,turn:2.51},
+  sz159338:{px:1.011,chg:0.80,hi:1.016,lo:0.992,pos:79,turn:17.71},
+  sh512800:{px:0.916,chg:-1.08,hi:0.928,lo:0.914,pos:14,turn:9.41},
+  sh512890:{px:1.256,chg:-1.18,hi:1.268,lo:1.255,pos:8,turn:2.51},
+  sh518880:{px:7.396,chg:1.57,hi:7.408,lo:7.304,pos:88,turn:5.55},
   sh510300:{px:4.061,chg:-0.54,hi:4.075,lo:4.045,pos:53,turn:1.13},
   sh513050:{px:0.946,chg:1.28,hi:0.951,lo:0.936,pos:67,turn:4.46},
   sh563360:{px:1.083,chg:-1.19,hi:1.09,lo:1.08,pos:30,turn:10.91},
@@ -554,13 +583,13 @@ const D={
    rows:[["10月数据","<b class='bad'>社零 +0.4%</b>（9月 +1.1%，回落 0.7pct）｜<b class='bad'>1-10月固投 −8.1%</b>（降幅再扩大 0.9pct）｜地产投资 <b class='bad'>−21.6%</b>｜民间投资 −11.4%"],["生产端","<b class='up'>工业增加值 +4.8%</b>｜装备制造 +10.6%｜高技术制造 +17.6%｜机器人产量 +26.0%"],["唯一强项","<b class='up'>出口 +31.2%（+28.7%）</b>、进口 +34.7%"],["通胀结构","<b class='wn'>PPI +5.7%</b>（扩大 0.7pct）：油气 +35%、石油加工 +29.9%、化工 +16.4%、煤炭 +36.6%｜CPI +0.7%"],["流动性","<b>央行开展 4600 亿隔夜逆回购</b>｜中长期资金年内净买入 A 股超 6000 亿"]],
    v:"供需错配极端",vt:"b-bd",a:"供强需弱 → 上下游利润再分配；出口强靠抢份额，等于压价"},
   {n:"② 市场",cls:"lay2",q:"现在能不能做？",
-   rows:[["宽度","涨停 32 / 跌停 12 → 恐慌减轻"],["量能","两市 <b>1.48 万亿</b>（11/13 是 1.656 万亿）→ <b>缩量下跌</b>"],["收盘","<b class='bad'>上证 3602.57 −0.87% 位44%、深成 −2.53% 位20%、创业板 <b>−4.37% 位12%</b>、科创50 <b>−5.16%</b>、中证1000 −3.03% 位16%</b>"],["主线强度","中际 <b class='bad'>−12.28%</b> 位6%、天孚 <b class='bad'>−11.83%</b> 位4%、新易盛 −11.08% 位10%、工业富联 −9.68% 位4%、寒武纪 −8.27%"],["防御","<b class='up'>银行ETF +2.23% 位 100%（收日内最高）、工行 +2.26% 位100%、红利 +1.45% 位92%、茅台 +1.30% 位97%、美的 +2.35% 位95%</b>"],["159338","<b class='bad'>最低 1.018 破了硬死线 1.020</b>，收 1.024，区间位 40%，换手 <b class='bad'>21.64%</b>（天量）"]],
+   rows:[["宽度","涨停 32 / 跌停 12 → 恐慌减轻"],["量能","两市 <b>1.48 万亿</b>（11/13 是 1.656 万亿）→ <b>缩量下跌</b>"],["收盘","<b class='bad'>上证 3602.57 −0.87% 位44%、深成 −2.53% 位20%、创业板 <b>−4.37% 位12%</b>、科创50 <b>−5.16%</b>、中证1000 −3.03% 位16%</b>"],["主线强度","中际 <b class='bad'>−12.28%</b> 位6%、天孚 <b class='bad'>−11.83%</b> 位4%、新易盛 −11.08% 位10%、工业富联 −9.68% 位4%、寒武纪 −8.27%"],["防御","<b class='up'>银行ETF +2.23% 位 100%（收日内最高）、工行 +2.26% 位100%、红利 +1.45% 位92%、茅台 +1.30% 位97%、美的 +2.35% 位95%</b>"],["159338","<b class='bad'>最低 1.105 破了硬死线 1.100</b>，收 1.118，区间位 40%，换手 <b class='bad'>21.64%</b>（天量）"]],
    v:"硬死线盘中破了",vt:"b-bd",a:"红利收在最高=拥挤度顶，明天回撤风险；成长连续两天崩塌"},
   {n:"③ 板块",cls:"lay3",q:"钱正在往哪搬？",
    rows:[["崩（算力链）","中际 <b class='bad'>−7.70%</b> 位20%（<b>创年内新低</b>，成交 133.5 亿两市第一，主力净卖出 12 亿）｜新易盛 −6.97%｜天孚 −7.14%｜工业富联 −6.71%（破一年最低收盘）"],["涨（红利）","工行/建行/成都银行/南京银行/杭州银行/青岛银行 <b>创历史新高</b>，四大行总市值破 10 万亿｜银行 ETF +1.23% 位86%｜美的创新高｜古井贡酒 +6%"],["能源上游","PPI 源头受益：煤炭 +36.6%、油气 +35%、石油加工 +29.9%"],["新题材","<b>固态电池</b>（七部门：2030 规模化）湃科技 20cm 涨停｜稀土（中国稀土复牌涨停）｜AI 漫剧"],["新利空","康方生物 −15%（依沃西 FDA 未批）｜沪银 −6%｜30 年国债期货 −0.5% 创新低"]],
    v:"上下游利润再分配",vt:"b-wn",a:"一个原因解释全部涨跌；红利拥挤度是最大尾部风险"},
   {n:"④ 标的",cls:"lay4",q:"买哪一个、什么价？",
-   rows:[["159338","<b class='bad'>1.026（−1.06%），最低 1.022</b>；区间位 <b class='bad'>36%</b>；换手 <b class='bad'>16.84%（放量下跌）</b>"],["权重健康","<b class='bad'>中际位10% + 新易盛位18% + 工业富联位2%</b> → A500 前十大至少 3 只贴地"],["加仓三条件","①换手 16.84%&lt;18% <b class='wn'>勉强✓但在升</b>｜②权重健康度 <b class='bad'>✗</b>｜③守住 1.040 <b class='bad'>✗</b> → <b>只成立 1 条，不加</b>"],["两端贴边","<b class='bad'>创业板位 9%（贴地）</b>｜<b class='bad'>银行 ETF 位 93%（贴顶）</b> → 护盘到极致"],["513050","<b class='gd'>确认无持仓</b>"],["第三方交叉验证","何志坚 11/16：<b>「日内强势的方向是卖点」</b>——今天最强的银行/红利正是这句话的对象"],["另一个载体","<b class='ac'>场外宽基联接定投</b> = 摊成本的机器；场内只做底仓与反弹减仓"]],
+   rows:[["159338","<b class='bad'>1.122（−1.06%），最低 1.113</b>；区间位 <b class='bad'>36%</b>；换手 <b class='bad'>16.84%（放量下跌）</b>"],["权重健康","<b class='bad'>中际位10% + 新易盛位18% + 工业富联位2%</b> → A500 前十大至少 3 只贴地"],["加仓三条件","①换手 16.84%&lt;18% <b class='wn'>勉强✓但在升</b>｜②权重健康度 <b class='bad'>✗</b>｜③守住 1.120 <b class='bad'>✗</b> → <b>只成立 1 条，不加</b>"],["两端贴边","<b class='bad'>创业板位 9%（贴地）</b>｜<b class='bad'>银行 ETF 位 93%（贴顶）</b> → 护盘到极致"],["513050","<b class='gd'>确认无持仓</b>"],["第三方交叉验证","何志坚 11/16：<b>「日内强势的方向是卖点」</b>——今天最强的银行/红利正是这句话的对象"],["另一个载体","<b class='ac'>场外宽基联接定投</b> = 摊成本的机器；场内只做底仓与反弹减仓"]],
    v:"死线续破 · 承接减弱",vt:"b-bd",a:"按你的死线减；反弹到减仓区再减"},
   {n:"⑤ 仓位",cls:"lay5",q:"买多少、错了亏多少？",
    rows:[["真实持仓","<b>在「价位」页填入你的数量和成本后，这里自动算</b>"],["减仓后","卖出<b>不会</b>改变成本价，只降暴露"],["超上限","<b>单标的 ≤50%</b> 是写死的纪律，超了就减"],["死线击穿","<b>死线要在 1.5–2 倍日振幅之外</b>，否则必被噪音洗掉"],["目标仓位","两条路径终点相同：反弹减仓 / 破位减仓"],["513050","想跟踪就填，想买就自己判断"],["摊成本载体","<b>场外联接 / 定投</b>（1 元起投、不用择时）｜场内 ETF 做不了摊平"]],
@@ -589,11 +618,11 @@ const D={
   {c:"🔴 必做",px:"—",q:"设条件单",note:"网页替你盯不了盘，条件单替你盯"},
   {c:"事件提醒",px:"财报日",q:"—",note:"财报前不留仓；事件驱动的持仓最容易在消息落地那天被埋"}
  ],
- lv159:[["示例·死线","1.040","跌破就减，不看理由","bad"],["示例·硬死线","1.008","要设在日振幅之外，否则被洗","bad"],["示例·反弹减仓区","1.040","涨到这卖 200","warn"],["今日低点","1.018","破了=新低","bad"],["均线","MA5 / MA10","价在线下=趋势仍弱","bad"],["估值","PE 分位","看分位不看绝对值","warn"],["加仓三条件","换手<18% + 权重健康度 + 守住死线","三条全中才买","warn"]],
+ lv159:[["示例·死线","1.120","跌破就减，不看理由","bad"],["示例·硬死线","1.100","要设在日振幅之外，否则被洗","bad"],["示例·反弹减仓区","1.120","涨到这卖 N 股","warn"],["今日低点","1.105","破了=新低","bad"],["均线","MA5 / MA10","价在线下=趋势仍弱","bad"],["估值","PE 分位","看分位不看绝对值","warn"],["加仓三条件","换手<18% + 权重健康度 + 守住死线","三条全中才买","warn"]],
  lv513:[["观察","—","先看区间位与换手是否改善","warn"],["状态","T+0 可当天纠错","跨境 ETF 的独特优势","ac"],["必查","溢价率",">1% 谨慎 >2% 别追","ac"],["状态","MA5 下方","修复不是反转","bad"],["状态","MA5 上方","才谈得上反弹","gd"],["状态","跌破 MA5","修复不是反转","bad"],["观察","低点不再下移 + 缩量 + 权重止跌","三条同时出现才算止跌","gd"]]
 
 };
-const DEF_LV={dl:1.040,hl:1.008,rb:1.040,lo:1.018};
+const DEF_LV={dl:1.120,hl:1.100,rb:1.120,lo:1.105};
 function myLv(){
  var o=DEF_LV;
  try{var j=JSON.parse(load('mylv')||'null');if(j)o=j;}catch(e){}
@@ -609,35 +638,35 @@ function KEYLVof(o){
  ];
 }
 const GLOSS=[
- ["区间位","今天成交价在最高价和最低价之间靠哪头。0% = 贴着今天最低，100% = 贴着今天最高","159338 今天 1.022~1.033，现价 1.026 → 区间位 36%"],
+ ["区间位","今天成交价在最高价和最低价之间靠哪头。0% = 贴着今天最低，100% = 贴着今天最高","159338 今天 0.992~1.016，现价 1.011 → 区间位 79%"],
  ["均价线","今天所有成交的平均价格。价格在线上 = 买的人更着急；在线下 = 卖的人更着急","分时图上那条黄线"],
- ["换手率","今天有百分之多少的筹码换了手。换手越高说明分歧越大、方向越乱","159338 今天 16.84%，昨天 21.33%，前天 13.66%"],
- ["死线","你自己定的「跌到这儿就撤」的线。不是分析师说的，是你的纪律","例：死线 1.040 → 收在 1.037 = 破位"],
- ["硬死线","最后一道防线，破了必须走，不看理由、不看外围","1.020，现价 1.026，只差 0.006"],
- ["反弹减仓区","涨到这一档就主动卖一部分。这是「兑现」，不是「被迫砍」","例：1.040–1.045 卖 200 股"],
+ ["换手率","今天有百分之多少的筹码换了手。换手越高说明分歧越大、方向越乱","159338 今天 17.71%（昨天 21.64%）"],
+ ["死线","你自己定的「跌到这儿就撤」的线。不是分析师说的，是你的纪律","例：死线 1.120 → 收在 1.117 = 破位"],
+ ["硬死线","最后一道防线，破了必须走，不看理由、不看外围","1.100，11/20 已破（最低 0.995），11/23 最低 0.992 二次破"],
+ ["反弹减仓区","涨到这一档就主动卖一部分。这是「兑现」，不是「被迫砍」","例：1.120–1.125 卖 N 股"],
  ["加仓区","只在三条条件全中时才买。少一条都不买","今天：换手 ✓、权重健康度 ✗、守住死线 ✗ → 不加"],
- ["委比 / 委差","现在排队买的人比排队卖的人多多少。正 = 有人接，负 = 没人接","买一 62.5 万 vs 卖一 3.5 万 → 委比 +89%"],
+ ["委比 / 委差","现在排队买的人比排队卖的人多多少。正 = 有人接，负 = 没人接","买一 9,709 手 vs 卖一 7,150 手 → 委差 +15%（价↑+委差↑ = 真买）"],
  ["背离","价在涨，但份额在减 = 有人借上涨派发","ETF 最容易看：每日公布份额"],
  ["高低切换","钱从一个风格搬到另一个。切过去的是高位，切过来的才是低位","今天：从光模块（高位）切到银行（低位）"],
- ["破位","跌破关键支撑而且没收回。支撑 = 前低 + 均线 + 整数关，取最近的","跌破 1.040 但收在 1.037 → 未破位；收在 1.037 下方 → 破位"],
+ ["破位","跌破关键支撑而且没收回。支撑 = 前低 + 均线 + 整数关，取最近的","跌破 1.120 但收在 1.117 → 未破位；收在 1.117 下方 → 破位"],
  ["净申购 / 份额","ETF 最独特的指标。份额增加 = 有人在净买入真金白银","每天查一次 159338 份额，比看涨幅有用"],
  ["T+0 / T+1","T+1 = 今天买明天才能卖；T+0 = 当天可卖","场内 A 股股票型 ETF 是 T+1；跨境/债券/黄金/货币是 T+0"],
  ["折溢价","场内价 − 净值。大于 0 叫溢价（你多付钱），小于 0 叫折价（你少付钱）","跨境 ETF 溢价能到 2%+，>2% 别追"],
- ["工具仓 vs 底仓","工具仓 = 波段用，涨了就落袋；底仓 = 长期 Beta，等级别修复","例：1000 股可拆成 600 工具 + 400 底仓"],
+ ["工具仓 vs 底仓","工具仓 = 波段用，涨了就落袋；底仓 = 长期 Beta，等级别修复","例：总持仓可拆成 60% 工具 + 40% 底仓"],
  ["倒 T","先卖后买，同一天在更低价买回来","A 股需要本来就有底仓（你有）"],
- ["摊薄成本","只有「买入」才会改成本价，「卖出」不会","例：700@1.00 卖 100 后仍是 600@1.00"],
+ ["摊薄成本","只有「买入」才会改成本价，「卖出」不会","例：卖出不变成本价，只有「买入」才会改成本"],
  ["场外联接 / 定投","场外 = 不在交易所买卖，1 元起投、可定投、不用择时","任何一只宽基联接（0 申购费、满 7 天 0 赎回费）= 摊成本的正确工具"],
  ["加仓三条件","换手率<18% + 权重健康度转好 + 守住死线，三条全中才买","今天只成立 1 条 → 不加"],
- ["权重健康度","A500 前十大权重里，有几只跌得很难看","中际位 10% + 新易盛位 18% + 工业富联位 2% → 3 只贴地"],
+ ["权重健康度","A500 前十大权重里，有几只跌得很难看","中际 +6.10%、新易盛 +9.92%（转强）｜北方华创 −6.55%、寒武纪 −0.57%（仍弱）→ 权重健康度开始转好，但还没到能加仓的程度"],
  ["退潮","题材五段论的第 5 段。最直接的信号：前期龙头开始跌停","11/11 跌停 0 家 → 11/13 跌停 33 家"],
- ["日内强势方向 = 卖点","弱势轮动市里，当天最强的方向是别人今天买的，你明天要卖","今天最强的是银行 ETF（+1.34%，创新高）"],
- ["低吸点","弱势但有支撑和轮动预期的方向","159338 在 1.022 附近 —— 但我们要求三条件全中才买"],
+ ["日内强势方向 = 卖点","弱势轮动市里，当天最强的方向是别人今天买的，你明天要卖","11/23 最强是机器人 ETF +6.68%、光模块天孚 +13.82% → 日内强势的方向是卖点（已第 5 次验证）"],
+ ["低吸点","弱势但有支撑和轮动预期的方向","159338 在 0.992 附近 —— 但我们要求三条件全中才买"],
  ["传闻级催化","没拿到官方文件的消息。涨得快，回吐也更快","FCC「松动」传闻 → 11/11 暴涨 → 11/13、11/16 连杀"],
  ["CMSI","市场情绪指标。30 以下叫「冰点」，70 以上叫「过热」","今天 29.91 = 冰点"],
- ["赔率 / 期望值","赚的概率 × 赚的幅度，对比亏的概率 × 亏的幅度","加仓方案只在涨到 1.037 以上才划算"],
+ ["赔率 / 期望值","赚的概率 × 赚的幅度，对比亏的概率 × 亏的幅度","先算「买完这个标的占总资产多少」，>50% 一律不买"],
  ["条件单","把「跌到某价就卖」写进券商 App，到价自动下单","这是「没时间盯盘」的唯一解法"],
  ["仓位上限","单一个标的最多占总资产多少","写死 ≤50%；超过就是超了"],
- ["死线 vs 反弹减仓区","一个防守、一个进攻。破了死线先保命，涨到减仓区才兑现","硬死线 1.008 / 反弹减仓区 1.040–1.045"]
+ ["死线 vs 反弹减仓区","一个防守、一个进攻。破了死线先保命，涨到减仓区才兑现","硬死线 1.100 / 反弹减仓区 1.120–1.125"]
 ];
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const f2=n=>n.toFixed(2),f3=n=>n.toFixed(3),cls=v=>v>0?'up':(v<0?'dn':'mu');

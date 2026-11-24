@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0b0f17">
+<title>题材轮动图 · 传导链</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0b0f17;--panel:#121826;--panel2:#18202f;--line:#22304a;--tx:#e8eef7;--mu:#8b9ab3;--dim:#5d6d88;
+--up:#ff5b5b;--dn:#12c48b;--wn:#ffb648;--gd:#3ecf8e;--ac:#5b9cff;--pu:#a78bfa}
+body{background:var(--bg);color:var(--tx);font:15px/1.62 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;padding-bottom:env(safe-area-inset-bottom)}
+.wrap{max-width:1000px;margin:0 auto;padding:12px}
+header{position:sticky;top:0;z-index:20;background:rgba(11,15,23,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:10px 0}
+.hd{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.logo{font-size:17px;font-weight:800}.logo span{color:var(--pu)}
+.sub{color:var(--mu);font-size:12px;margin-top:3px}
+button.btn{background:var(--panel2);border:1px solid var(--line);color:var(--tx);border-radius:8px;padding:8px 12px;font-size:13px;cursor:pointer}
+button.btn.pri{background:var(--pu);color:#0d0820;border-color:transparent;font-weight:700}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px}
+h3{font-size:14px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+h3 .n{font-size:11px;color:var(--mu);font-weight:500;margin-left:auto}
+.row{display:flex;gap:8px;padding:7px 0;border-bottom:1px dashed rgba(255,255,255,.055);font-size:13.3px}
+.row:last-child{border-bottom:none}
+.lab{color:var(--mu);flex:0 0 76px;font-size:12.5px}.val{flex:1;min-width:0}
+.foot{margin-top:9px;padding:9px 10px;background:rgba(167,139,250,.08);border-left:3px solid var(--pu);border-radius:0 7px 7px 0;font-size:12.7px;line-height:1.68;color:#d3c8f5}
+.up{color:var(--up)}.dn{color:var(--dn)}.wn{color:var(--wn)}.gd{color:var(--gd)}.ac{color:var(--ac)}.mu{color:var(--mu)}.dim{color:var(--dim)}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.tbl th{color:var(--mu);font-weight:600;text-align:left;padding:6px 5px;border-bottom:1px solid var(--line);font-size:11.5px;white-space:nowrap}
+.tbl td{padding:6px 5px;border-bottom:1px solid rgba(255,255,255,.045);vertical-align:top}
+.tbl .num{text-align:right;font-family:ui-monospace,Menlo,monospace;white-space:nowrap}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}
+.k{display:inline-block;font-size:10.5px;border:1px solid var(--line);border-radius:4px;padding:1px 5px;white-space:nowrap}
+.kH{color:#ff8ab8;border-color:#6b2b47;background:rgba(255,90,160,.1)}
+.kM{color:var(--wn);border-color:#6b5228;background:rgba(255,182,72,.09)}
+.kC{color:#7fd7ff;border-color:#24506b;background:rgba(90,190,255,.08)}
+/* 链条 */
+.chain{display:flex;flex-direction:column;gap:0}
+.node{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px}
+.node.lit{border-color:#6b2b47;background:linear-gradient(180deg,rgba(255,90,160,.07),var(--panel2))}
+.node.cold{border-color:#24506b;background:linear-gradient(180deg,rgba(90,190,255,.06),var(--panel2))}
+.node-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.nd-no{font-size:17px;font-weight:900;color:var(--pu)}
+.nd-t{font-size:14.5px;font-weight:800}
+.nd-st{margin-left:auto;font-size:11px;border-radius:20px;padding:2px 9px;white-space:nowrap}
+.st-r{color:#ffb3b3;border:1px solid #6b2b47;background:rgba(255,91,91,.12)}
+.st-y{color:#ffd79a;border:1px solid #6b5228;background:rgba(255,182,72,.1)}
+.st-g{color:#a9f5cd;border:1px solid #256b4c;background:rgba(62,207,142,.12)}
+.st-b{color:#bcd6f5;border:1px solid #2a4470;background:rgba(91,156,255,.1)}
+.nd-d{font-size:12.2px;color:var(--mu);margin:4px 0 7px}
+.sig{font-size:12.4px;padding:6px 8px;border-radius:7px;background:rgba(255,255,255,.035);margin-top:6px}
+.sig b{color:var(--mu);font-weight:700}
+.arrow{text-align:center;color:var(--pu);font-size:17px;line-height:1;padding:5px 0;font-weight:900}
+.arrow small{display:block;color:var(--dim);font-size:10.5px;font-weight:500;margin-top:2px}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.tag{font-size:11px;border:1px solid var(--line);border-radius:6px;padding:3px 7px;background:rgba(255,255,255,.03)}
+.tag .v{font-family:ui-monospace,Menlo,monospace;font-weight:700}
+.tag .p{font-size:10px;color:var(--dim)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cols>div{min-width:0}
+@media(max-width:760px){.tw table{min-width:500px}.cols{grid-template-columns:1fr !important}}
+.big{font-size:30px;font-weight:900;font-family:ui-monospace,Menlo,monospace}
+.lamp{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px}
+.hbar{height:6px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:3px}
+.hbar i{display:block;height:100%;border-radius:3px}
+footer{color:var(--dim);font-size:11.5px;text-align:center;padding:18px 10px 26px;line-height:1.8}
+.kpi{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kpibox{flex:1 1 140px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:9px 10px}
+.kpibox .k{font-size:11px;color:var(--mu)}
+.kpibox .v{font-size:21px;font-weight:900;font-family:ui-monospace,Menlo,monospace;margin-top:2px}
+.kpibox .s{font-size:11px;color:var(--dim);margin-top:2px}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+ <div class="hd">
+  <div style="flex:1;min-width:200px">
+   <div class="logo">题材轮动图 <span>传导链 · 读时钟</span></div>
+   <div class="sub" id="ts">加载中…</div>
+  </div>
+  <button class="btn pri" onclick="location.href='chain.html'">🌍 产业链地图</button>
+  <button class="btn" onclick="location.href='board.html'">🎯 总看板</button>
+ </div>
+</div></header>
+<div class="wrap">
+
+ <div class="card">
+  <h3>⚡ 三个反直觉的实测结论 <span class="n">先看这个，别按直觉下注</span></h3>
+  <div class="row"><span class="lab">①</span><span class="val"><b>链内部不是「接力」，是「同步」。</b>实测 140 日日收益相关性：同环节 0.90 → 相邻环节 0.72 → 远端环节 0.47。相关系数随「环节距离」递减，说明传导的是<b class='ac'>同一条贝塔</b>，不是逐环轮动。<br><span class="mu">→ 意味着：<b>你不需要猜「哪一环先动」，因为它们一起动。</b>你只需要猜<b>哪条链整体在高位</b>。</span></span></div>
+  <div class="row"><span class="lab">②</span><span class="val"><b>轮动发生在「链与链之间」，不在链内部。</b>真正的切换是：AI算力链 ↔ 红利防御链 ↔ 电力资源链 ↔ 周期涨价链 之间资金搬家。<br><span class="mu">→ 11/23 已经演了一遍：红利塌方（银行ETF 位14%、红利低波位8%），机器人 +6.68%、创业板 +3.08%，涨停 28→146 家。</span></span></div>
+  <div class="row"><span class="lab">③</span><span class="val"><b>「国内电」和「国外绳」用数据分得开。</b>长江电力与光模块龙头相关系数只有 <b class='wn'>0.244</b>、中国核电 <b class='wn'>0.156</b>，而同一链内的光模块之间高达 <b class='gd'>0.896</b>。<br><span class="mu">→ <b class='bad'>电力根本不是 AI 链的一环。</b>外围电力今晚大涨，不构成「A 股电力该涨」的理由。</span></span></div>
+  <div class="foot">这套框架把「题材轮动」从<b>猜方向</b>改成<b>读位置</b>：<b>高位链 = 卖点，低位链 = 候选，但候选必须等启动信号才动。</b></div>
+ </div>
+
+ <div class="card">
+  <h3>🧭 轮动时钟 · 四条大链当前在哪 <span class="n">A 股 11/23 收盘</span></h3>
+  <div id="clock"></div>
+ </div>
+
+ <div class="card">
+  <h3>🔗 AI 算力链 · 九环传导 <span class="n">每环有「启动信号」和「确认信号」</span></h3>
+  <div class="chain" id="chain"></div>
+ </div>
+
+ <div class="card">
+  <h3>📐 实测相关性表 <span class="n">基准=中际旭创，140 日日收益，最佳滞后</span></h3>
+  <div class="foot" style="margin:0 0 8px">最佳滞后全部是 <b>0 日</b> —— 这就是结论①的证据。<b>相关系数随环节距离递减</b>：同环节 0.90 → PCB 0.72 → 液冷 0.60 → 存储 0.55 → 设备 0.47 → 电力 0.16~0.24。<b class='bad'>电力那一栏就是「国内电」的边界线。</b></div>
+  <div class="tw"><table class="tbl"><thead><tr><th>标的</th><th>环节</th><th class="num">相关系数</th><th>读法</th></tr></thead><tbody id="corr"></tbody></table></div>
+ </div>
+
+ <div class="card">
+  <h3>📋 布局规则（事前写死）</h3>
+  <div class="row"><span class="lab">规则 1</span><span class="val"><b>只买「低位链 + 已启动」的环节。</b>低位 = 距 60 日高 &gt; 20%；启动 = 5 日涨幅转正 且 有对应产业信号。<br><span class="mu">今天只有 ④光模块、⑤AI PCB 满足「低位+已启动」。③存储、⑦供电、⑨电网储能 是「低位但没启动」—— <b class='bad'>不启动就不买</b>。</span></span></div>
+  <div class="row"><span class="lab">规则 2</span><span class="val"><b>同环节内只买最强的那个。</b>链内相关性 0.90，同环节内部强弱差可达 12 个百分点（沪电 +11.8% vs 生益 −1.0%；富联 +5.7% vs 浪潮 −14.0%）。<b>买环节内强的，不买环节内弱的。</b></span></div>
+  <div class="row"><span class="lab">规则 3</span><span class="val"><b>反向检验：外围涨而对应 A 股不涨 = 资金不认，立刻放弃这一环。</b>今晚美股电力大涨 8~9.6%，但 A 股电力已处 60 日高位（区间位 96~99%）—— 这是「该卖」不是「该买」。</span></div>
+  <div class="row"><span class="lab">规则 4</span><span class="val"><b>卖出条件写在前面：</b>涨到区间位 80% 以上 或 5 日涨幅 &gt; 15% → 减半（对应「日内强势的方向是卖点」）。<b class='bad'>不要等到「涨得更多」再决定卖。</b></span></div>
+  <div class="row"><span class="lab">规则 5</span><span class="val"><b>每条链都要有一根 K 线可以被打脸。</b>找不到「这一环启动了我才买」的具体条件，就说明你买的是想象，不是信号。</span></div>
+ </div>
+
+ <div class="card">
+  <h3>🎯 宽基 Beta 在哪条链上？</h3>
+  <div class="foot" style="margin:0">
+   <b>159338 中证A500 不属于上面任何一条链。</b>它是<b class='ac'>所有链的加权平均</b> —— 涨的时候它涨一点（+0.80%），跌的时候它跌一点（今天却收在区间位 79%）。<br>
+   <b>这就是「为什么它跟涨不跟、跟跌不跌」的答案</b>：你拿的是 Beta，不是某条链的 Alpha。<br><br>
+   <b>如果你想要的是「押某条链」</b>，工具是对应的 ETF（通信ETF 515880 / 芯片ETF 159995 / 电力ETF 159611），不是宽基。<br>
+   <b>但顺序仍然是</b>：① 先把最大单一标的的仓位降到 ≤50% → ② 才谈加哪条链 → ③ 每条链只能 ≤50%，且要过「低位+已启动+反向检验」三关。
+  </div>
+ </div>
+
+ <footer>
+  A 股：2026-11-23 收盘 ｜ 美股：2026-11-23 23:31 北京时间 / 美东 10:31（开盘约 1 小时）<br>
+  相关系数为 140 个交易日日收益率与中际旭创的最佳滞后相关（−12~+12 交易日搜索）。<br>
+  本文为个人研究笔记，<b>不构成投资建议</b>，盘中价格秒级变化。
+ </footer>
+</div>
+<script>
+const D={"A": {"601138": {"mk": "A", "code": "601138", "name": "工业富联", "g": "⑥服务器整机", "last": 38.29, "r5": 5.715074544450571, "r20": -18.06120265354162, "r60": -39.06747294716742, "hi": 66.57, "lo": 35.9, "dhi": -42.481598317560454, "dlo": 6.6573816155988785, "pos": 7.792631235735249, "n": 131}, "688256": {"mk": "A", "code": "688256", "name": "寒武纪", "g": "②AI芯片", "last": 914.8, "r5": 1.8742274240787449, "r20": -5.495867768595042, "r60": -11.613526570048316, "hi": 1136.01, "lo": 767.93, "dhi": -19.472539854402694, "dlo": 19.125441120935506, "pos": 39.90165181482286, "n": 131}, "002371": {"mk": "A", "code": "002371", "name": "北方华创", "g": "②半导体设备", "last": 541.09, "r5": -0.9700031113307306, "r20": 4.659574468085115, "r60": -24.262698934815152, "hi": 718.0, "lo": 478.74, "dhi": -24.63927576601671, "dlo": 13.023770731503536, "pos": 26.059516843601116, "n": 131}, "603986": {"mk": "A", "code": "603986", "name": "兆易创新", "g": "③存储", "last": 214.61, "r5": -3.857181256159836, "r20": -22.36932537529389, "r60": -47.535813817043945, "hi": 411.2, "lo": 205.88, "dhi": -47.80885214007782, "dlo": 4.2403341752477175, "pos": 4.251899473991827, "n": 131}, "301308": {"mk": "A", "code": "301308", "name": "江波龙", "g": "③存储模组", "last": 193.21, "r5": -3.051803383979279, "r20": -16.298433492756637, "r60": -48.95268592202741, "hi": 384.082, "lo": 186.162, "dhi": -49.69563791065449, "dlo": 3.7859498716172, "pos": 3.5610347615198075, "n": 131}, "300308": {"mk": "A", "code": "300308", "name": "中际旭创", "g": "④光模块", "last": 417.2, "r5": 2.0123725456634878, "r20": -29.823380992430614, "r60": -55.70212973797152, "hi": 941.806, "lo": 393.0, "dhi": -55.70212973797152, "dlo": 6.157760814249369, "pos": 4.409572781638682, "n": 131}, "300502": {"mk": "A", "code": "300502", "name": "新易盛", "g": "④光模块", "last": 181.36, "r5": 8.729016786570742, "r20": -27.94310461281735, "r60": -58.9683257918552, "hi": 456.73, "lo": 158.21, "dhi": -60.29163838591728, "dlo": 14.632450540420972, "pos": 7.754924293179689, "n": 131}, "300394": {"mk": "A", "code": "300394", "name": "天孚通信", "g": "④光器件", "last": 116.3, "r5": 5.535390199637025, "r20": -40.958472941415366, "r60": -57.33362682515224, "hi": 284.66, "lo": 102.18, "dhi": -59.14424225391696, "dlo": 13.818751223331361, "pos": 7.7378342832091125, "n": 131}, "002463": {"mk": "A", "code": "002463", "name": "沪电股份", "g": "⑤AI PCB", "last": 82.7, "r5": 11.786969451203033, "r20": -16.38018200202225, "r60": -31.77130599785496, "hi": 128.25, "lo": 72.9, "dhi": -35.51656920077973, "dlo": 13.44307270233196, "pos": 17.705510388437215, "n": 131}, "600183": {"mk": "A", "code": "600183", "name": "生益科技", "g": "⑤覆铜板", "last": 60.75, "r5": -0.9618519726116825, "r20": -39.407540394973076, "r60": -54.25451807228916, "hi": 154.48, "lo": 58.37, "dhi": -60.674520973588805, "dlo": 4.077437039575127, "pos": 2.4763292061179927, "n": 131}, "000977": {"mk": "A", "code": "000977", "name": "浪潮信息", "g": "⑥服务器", "last": 44.16, "r5": -13.968439509059039, "r20": -22.743177046885933, "r60": -42.16110019646365, "hi": 86.35, "lo": 43.25, "dhi": -48.85929357266937, "dlo": 2.10404624277456, "pos": 2.1113689095127532, "n": 131}, "002837": {"mk": "A", "code": "002837", "name": "英维克", "g": "⑦液冷", "last": 32.76, "r5": -5.9701492537313605, "r20": -23.760763323248778, "r60": -39.467849223946786, "hi": 68.49, "lo": 32.04, "dhi": -52.16819973718791, "dlo": 2.2471910112359605, "pos": 1.9753086419753059, "n": 131}, "002335": {"mk": "A", "code": "002335", "name": "科华数据", "g": "⑦数据中心供电", "last": 22.42, "r5": -4.433077578857625, "r20": -12.999611951882029, "r60": -26.006600660066002, "hi": 32.63, "lo": 21.62, "dhi": -31.29022372050261, "dlo": 3.700277520814055, "pos": 7.266121707538607, "n": 131}, "600900": {"mk": "A", "code": "600900", "name": "长江电力", "g": "⑧水电", "last": 31.35, "r5": 2.820596917021989, "r20": 4.9899531145344955, "r60": 12.124463519313311, "hi": 31.62, "lo": 27.85, "dhi": -0.8538899430740043, "dlo": 12.5673249551167, "pos": 92.83819628647217, "n": 131}, "601985": {"mk": "A", "code": "601985", "name": "中国核电", "g": "⑧核电", "last": 9.78, "r5": -1.311806256306769, "r20": 3.2734952481520363, "r60": 12.54315304948217, "hi": 9.98, "lo": 8.69, "dhi": -2.0040080160320772, "dlo": 12.54315304948217, "pos": 84.49612403100768, "n": 131}, "600795": {"mk": "A", "code": "600795", "name": "国电电力", "g": "⑧火电", "last": 5.42, "r5": -1.6333938294010864, "r20": 5.242718446601935, "r60": 6.066536203522488, "hi": 5.62, "lo": 4.98, "dhi": -3.558718861209964, "dlo": 8.835341365461847, "pos": 68.74999999999996, "n": 131}, "002518": {"mk": "A", "code": "002518", "name": "科士达", "g": "⑨电网/储能", "last": 24.01, "r5": -4.342629482071714, "r20": -12.659148781375041, "r60": -28.070701018573995, "hi": 39.49, "lo": 23.24, "dhi": -39.199797417067614, "dlo": 3.3132530120482118, "pos": 4.738461538461556, "n": 131}, "300274": {"mk": "A", "code": "300274", "name": "阳光电源", "g": "⑨光伏储能", "last": 70.23, "r5": -7.360506529481592, "r20": 0.0, "r60": -37.54279870158743, "hi": 112.445, "lo": 65.29, "dhi": -37.54279870158743, "dlo": 7.566242916219945, "pos": 10.476089492100519, "n": 131}}, "U": {"usNVDA.OQ": {"mk": "U", "code": "usNVDA.OQ", "name": "英伟达", "g": "②AI芯片", "last": 169.14, "r5": 8.325861406430125, "r20": -21.69444444444445, "r60": -22.166490267359997, "hi": 239.24, "lo": 125.53, "dhi": -29.301120214011046, "dlo": 34.740699434398145, "pos": 38.35194793773633, "n": 130, "live": 35.4}, "usCOHR.N": {"mk": "U", "code": "usCOHR.N", "name": "Coherent", "g": "④光模块", "last": 224.87, "r5": 10.539251831096696, "r20": 1.5214446952595884, "r60": -19.45916905444126, "hi": 338.36, "lo": 169.76, "dhi": -33.54119872325334, "dlo": 32.4634778510839, "pos": 32.686832740213525, "n": 131, "live": 19.65}, "usAPH.N": {"mk": "U", "code": "usAPH.N", "name": "安费诺", "g": "⑤连接器", "last": 76.77, "r5": 1.7764815060320682, "r20": 1.992825827022715, "r60": -2.5142857142857244, "hi": 88.62, "lo": 69.72, "dhi": -13.371699390656744, "dlo": 10.111876075731496, "pos": 37.301587301587276, "n": 130, "live": 10.58}, "usVRT.N": {"mk": "U", "code": "usVRT.N", "name": "Vertiv", "g": "⑦供电液冷", "last": 189.93, "r5": 0.6678327238034854, "r20": -4.930423465812394, "r60": -26.105902034781924, "hi": 290.77, "lo": 166.24, "dhi": -34.680331533514455, "dlo": 14.250481231953804, "pos": 19.02352846703606, "n": 130, "live": 14.77}, "usVST.N": {"mk": "U", "code": "usVST.N", "name": "Vistra", "g": "⑧电力", "last": 124.82, "r5": -4.102642901044873, "r20": -11.931136668312991, "r60": -8.803974574413687, "hi": 166.72, "lo": 112.89, "dhi": -25.131957773512482, "dlo": 10.567809371954983, "pos": 22.162362994612657, "n": 130, "live": 8.24}, "usCEG.N": {"name": "Constellation", "g": "⑧核电", "last": 251.9, "r5": -9.329781873155273, "r20": -0.07933359777865245, "r60": -8.840878659573692, "dhi": -16.01933655609268, "pos": 23.169171730092756, "live": 5.88}, "usMU.O": {"name": "美光", "g": "③存储", "last": 718.07, "r5": -0.1321242802703626, "r20": -20.541108775035966, "r60": -23.009210117190428, "dhi": -34.552530601456475, "pos": 24.581227867743614, "live": 19.96}, "usLITE.O": {"name": "Lumentum", "g": "④光模块", "last": 560.62, "r5": 2.677655677655677, "r20": -31.47292507028481, "r60": -37.3608938547486, "dhi": -50.53643903299807, "pos": 14.87382219183782, "live": 22.55}, "usGOOGL.O": {"name": "Alphabet", "g": "①云Capex", "last": 283.57, "r5": -0.052869025800095226, "r20": -10.489267676767678, "r60": -18.133264045268206, "dhi": -20.114375862748968, "pos": 20.383586083853668, "live": 6.16}, "usAMZN.O": {"name": "Amazon", "g": "①云Capex", "last": 257.82, "r5": 0.027158098933077746, "r20": 3.504757316632534, "r60": -3.2316180610291734, "dhi": -4.81780928120501, "pos": 57.24115334207075, "live": 4.09}, "usMSFT.O": {"name": "Microsoft", "g": "①云Capex", "last": 503.6, "r5": -2.5937602754298683, "r20": -5.265336067269888, "r60": -1.7461711052580098, "dhi": -9.218733100191079, "pos": 27.171745941327302, "live": 3.98}, "usCEG.O": {"name": "Constellation", "g": "⑧核电", "last": 251.9, "r5": -9.329781873155273, "r20": -0.07933359777865245, "r60": -8.840878659573692, "dhi": -16.01933655609268, "pos": 23.169171730092756, "live": 5.88}, "usGLW.N": {"name": "康宁", "g": "④光纤", "last": 110.58, "r5": 4.153715738909303, "r20": -13.236563358179687, "r60": -25.460060667340745, "dhi": -34.40503025269902, "pos": 21.832884097035038, "live": 17.9}, "usSTX.O": {"name": "希捷", "g": "③存储", "last": 541.92, "r5": 8.601202404809616, "r20": -15.878362645721122, "r60": -34.637558798697384, "dhi": -42.688537072876684, "pos": 17.379646307515955, "live": 18.82}, "usWDC.O": {"name": "西部数据", "g": "③存储", "last": 306.88, "r5": 9.237176520841484, "r20": -13.829219666975545, "r60": -33.18673662667915, "dhi": -36.36891432362942, "pos": 20.69448840258624, "live": 17.2}, "usJBL.O": {"name": "Jabil", "g": "⑥服务器", "live": 9.33, "r5": null, "r20": null, "r60": null, "dhi": null}, "usCLS.O": {"name": "Celestica", "g": "⑥服务器", "live": 9.49, "r5": null, "r20": null, "r60": null, "dhi": null}, "usANET.O": {"name": "Arista", "g": "⑥网络", "live": 9.84, "r5": null, "r20": null, "r60": null, "dhi": null}, "usETN.N": {"name": "Eaton", "g": "⑨电网设备", "live": 8.15, "last": 336.26, "r5": -0.18, "r20": -9.31, "r60": -16.26, "dhi": -24.22, "pos": 18.8}, "usTLN.O": {"name": "Talen", "g": "⑧AI供电", "live": 8.62, "last": 361.12, "r5": 0.38, "r20": 6.91, "r60": 21.95, "dhi": -6.61, "pos": 75.5}, "usAAOI.O": {"name": "Applied Opto", "g": "④光模块", "live": 22.76, "last": 40.44, "r5": -10.45, "r20": -43.79, "r60": -61.93, "dhi": -68.93, "pos": 7.7}, "usALAB.O": {"name": "Astera Labs", "g": "④互联芯片", "live": 19.33, "last": 214.87, "r5": 6.19, "r20": -17.2, "r60": -25.77, "dhi": -44.88, "pos": 16.8}, "usFN.O": {"name": "Fabrinet", "g": "④光模块代工", "live": 17.03, "r5": null, "r20": null, "r60": null, "dhi": null}, "usCRDO.O": {"name": "Credo", "g": "④互联芯片", "live": 25.39, "last": 123.91, "r5": 2.65, "r20": -18.02, "r60": -46.76, "dhi": -46.76, "pos": 18.1}, "usMXL.O": {"name": "MaxLinear", "g": "④光芯片", "live": 24.99, "last": 51.13, "r5": -1.62, "r20": -23.08, "r60": -17.17, "dhi": -53.22, "pos": 14.3}, "usCIEN.O": {"name": "Ciena", "g": "④光设备", "live": 16.23, "last": 271.14, "r5": null, "r20": null, "r60": null, "dhi": null}, "usTSM.N": {"name": "台积电", "g": "②代工", "live": 17.01, "last": 370.58, "r5": -0.77, "r20": -12.68, "r60": -11.01, "dhi": -23.72, "pos": 31.0}, "usAMAT.O": {"name": "应用材料", "g": "②设备", "live": 15.12, "last": 348.73, "r5": -0.28, "r20": -9.89, "r60": -24.35, "dhi": -35.6, "pos": 19.3}, "usLRCX.O": {"name": "泛林", "g": "②设备", "live": 15.81, "last": 212.0, "r5": 0.55, "r20": -10.74, "r60": -29.7, "dhi": -38.99, "pos": 17.5}, "usKLAC.O": {"name": "科磊", "g": "②设备", "live": 14.29, "last": 144.94, "r5": 0.68, "r20": -2.72, "r60": -17.31, "dhi": -29.84, "pos": 22.7}, "usASML.O": {"name": "ASML", "g": "②设备", "live": 10.68, "last": 1402.84, "r5": -0.28, "r20": -11.72, "r60": -17.2, "dhi": -24.79, "pos": 22.8}, "usMRVL.O": {"name": "迈威尔", "g": "②ASIC", "live": 21.9, "last": 147.11, "r5": 1.2, "r20": -37.07, "r60": -32.08, "dhi": -48.73, "pos": 15.1}, "usAMD.O": {"name": "AMD", "g": "②GPU", "live": 8.55, "last": 461.24, "r5": -8.53, "r20": -13.18, "r60": -0.93, "dhi": -28.98, "pos": 23.2}, "usAVGO.O": {"name": "博通", "g": "②ASIC", "live": 3.2, "last": 312.59, "r5": -6.24, "r20": -5.04, "r60": -15.09, "dhi": -16.98, "pos": 24.8}, "usINTC.O": {"name": "英特尔", "g": "②CPU", "live": 14.94, "last": 58.64, "r5": 5.71, "r20": -35.18, "r60": -34.46, "dhi": -53.97, "pos": 9.7}, "usAMKR.O": {"name": "艾马克", "g": "②封测", "live": 16.93, "last": 35.01, "r5": 2.82, "r20": -4.89, "r60": -26.74, "dhi": -37.5, "pos": 18.5}, "usSNPS.O": {"name": "新思", "g": "②EDA", "live": 9.48, "last": 431.2, "r5": -2.3, "r20": -5.09, "r60": -2.58, "dhi": -15.45, "pos": 44.6}, "usCDNS.O": {"name": "铿腾", "g": "②EDA", "live": 9.64, "last": 307.36, "r5": -0.67, "r20": -4.6, "r60": -9.7, "dhi": -14.52, "pos": 39.0}, "usTXN.O": {"name": "德州仪器", "g": "②模拟", "live": 11.79, "last": 294.3, "r5": 0.03, "r20": -0.8, "r60": 14.35, "dhi": -5.82, "pos": 69.9}, "usADI.O": {"name": "亚德诺", "g": "②模拟", "live": 11.18, "last": 383.52, "r5": 0.09, "r20": -5.98, "r60": 6.33, "dhi": -11.48, "pos": 43.0}, "usORCL.O": {"name": "Oracle", "g": "①云", "live": 14.86, "r5": null, "r20": null, "r60": null, "dhi": null}, "usMETA.O": {"name": "Meta", "g": "①云", "live": 5.67, "last": 592.28, "r5": -5.45, "r20": -6.07, "r60": 2.55, "dhi": -23.83, "pos": 14.5}, "usIBM.O": {"name": "IBM", "g": "⑥服务器", "live": 4.39, "r5": null, "r20": null, "r60": null, "dhi": null}, "usCSCO.O": {"name": "Cisco", "g": "⑥网络", "live": 6.34, "last": 96.41, "r5": 2.0, "r20": -12.55, "r60": -11.95, "dhi": -18.57, "pos": 20.8}, "usEQIX.O": {"name": "Equinix", "g": "⑦IDC", "live": 6.51, "last": 1029.05, "r5": -0.85, "r20": 6.88, "r60": -0.98, "dhi": -3.59, "pos": 67.9}, "usDLR.O": {"name": "Digital Realty", "g": "⑦IDC", "live": 4.9, "r5": null, "r20": null, "r60": null, "dhi": null}, "usFSLR.O": {"name": "First Solar", "g": "④光伏", "live": 6.79, "last": 147.4, "r5": -9.26, "r20": -12.34, "r60": -27.91, "dhi": -30.88, "pos": 13.0}, "usENPH.O": {"name": "Enphase", "g": "④光伏", "live": 7.39, "last": 21.1, "r5": -15.43, "r20": -30.5, "r60": -43.36, "dhi": -45.66, "pos": 7.7}, "usRUN.O": {"name": "Nextracker", "g": "④光伏", "live": 6.29, "last": 7.03, "r5": -15.81, "r20": -3.3, "r60": -19.93, "dhi": -29.56, "pos": 12.7}, "usFLNC.O": {"name": "Fluence", "g": "⑨储能", "live": 14.45, "last": 3.92, "r5": -8.62, "r20": -28.73, "r60": -63.97, "dhi": -64.49, "pos": 6.1}, "usBEP.O": {"name": "Brookfield", "g": "⑧水电", "live": 2.23, "r5": null, "r20": null, "r60": null, "dhi": null}, "usNRG.O": {"name": "NRG", "g": "⑧火电", "live": 6.81, "r5": null, "r20": null, "r60": null, "dhi": null}, "usGEV.O": {"name": "GE Vernova", "g": "⑧燃机/⑨电网", "live": 9.6, "r5": null, "r20": null, "r60": null, "dhi": null}, "usSO.O": {"name": "Southern", "g": "⑧防御公用", "live": -0.57, "r5": null, "r20": null, "r60": null, "dhi": null}, "usDUK.O": {"name": "Duke", "g": "⑧防御公用", "live": -1.12, "r5": null, "r20": null, "r60": null, "dhi": null}, "usNEE.O": {"name": "NextEra", "g": "⑧防御公用", "live": -0.13, "r5": null, "r20": null, "r60": null, "dhi": null}, "usAEP.O": {"name": "AEP", "g": "⑧防御公用", "live": 0.82, "last": 126.11, "r5": -2.5, "r20": -1.66, "r60": 3.9, "dhi": -2.73, "pos": 72.7}}, "CHAIN": [{"no": "①", "t": "云厂 Capex（源头）", "d": "整条链的钱从哪来。只有它加预算，下面每一环才有订单。", "cn": [], "us": ["usGOOGL.O", "usAMZN.O", "usMSFT.O", "usORCL.O", "usMETA.O"], "sig": "谷歌云积压订单 5140 亿美元｜亚马逊全年 capex 上调至约 2200 亿｜Meta 下限提到 1300 亿｜2026Q2 四大云厂合计 >1700 亿，全年指引约 7450 亿", "confirm": "下一季财报里 capex 指引<b class=gd>继续上修</b>（不是执行，是上修）", "act": "只当信号用，不当标的。它涨说明整条链有预算，但它自己不产生弹性。"}, {"no": "②", "t": "AI 芯片 / 设备", "d": "算力的心脏，也是资金最先砸钱的地方。", "cn": ["688256", "002371"], "us": ["usNVDA.OQ", "usAMD.O", "usAVGO.O", "usMRVL.O", "usTSM.N", "usAMAT.O", "usLRCX.O", "usKLAC.O", "usASML.O", "usAMKR.O", "usSNPS.O", "usCDNS.O", "usTXN.O", "usADI.O", "usINTC.O"], "sig": "黄仁勋回归概率（预测市场）｜台积电/Coherent/Lumentum 产能锁定｜英伟达营收指引", "confirm": "美股龙头**开盘不跌**（今晚 NVDA +35.4% 就是最强确认）", "act": "A 股芯片是「国内电」，<b class='bad'>不跟美股</b>。只有北方华创这类真吃海外设备的才跟。"}, {"no": "③", "t": "存储（HBM/DRAM/NAND/HDD）", "d": "AI 存储是这轮最挤的一条，缺口比产能更稀缺。", "cn": ["603986", "301308"], "us": ["usMU.O", "usSTX.O", "usWDC.O"], "sig": "高速 EML 激光器供需缺口从 25~30% 扩大到 30%+｜200G EML 订单排产能见度已延伸到 2028 年｜英伟达与 Coherent/Lumentum 签长期锁产能", "confirm": "美光 MU 站上并守住 700 美元（今 718）｜A 股存储板块 5 日涨幅转正", "act": "⚠️ A 股存储 60 日跌 47~49%、<b>区间位仅 3~5%</b> —— 是全链最低位，但<b class='bad'>5 日仍是 −3~4%，还没启动</b>。不启动就不买。"}, {"no": "④", "t": "互联「绳子」（光纤/光模块/CPO）", "d": "AI 集群里流数据的管道。分三档：光纤、光模块、光器件。", "cn": ["300308", "300502", "300394"], "us": ["usGLW.N", "usLITE.O", "usCOHR.N", "usAAOI.O", "usALAB.O", "usFN.O", "usCIEN.O", "usCRDO.O", "usMXL.O"], "sig": "800G/1.6T 出货 3300 万只(2026)→7100 万只(2027，高盛)｜订单已排到 2027｜FCC 对中国光模块禁令进展｜英伟达 CPO 交换机量产冲击可插拔", "confirm": "<b class='gd'>已确认</b>：新易盛 5 日 +8.7%、天孚 +5.5%、沪电 +11.8%，今晚美股 LITE +22.6%、COHR +19.7%、GLW +17.9%", "act": "<b class='wn'>这是全链弹性最大、也最拥挤的一环</b>。今晚已经暴涨，明天高开就是接盘位（→「日内强势的方向是卖点」）。"}, {"no": "⑤", "t": "AI PCB / 覆铜板 / 连接器", "d": "把模块和芯片连成机器的「电路板」。", "cn": ["002463", "600183"], "us": ["usAPH.N"], "sig": "AI 服务器主板层数增加、CCL 涨价｜泰国产能（广合科技泰国工厂 100% 做算力服务器主板）", "confirm": "沪电 5 日 +11.8% 已转强｜生益 5 日 −1.0% 还没跟上（<b>同环节内部也要挑</b>）", "act": "环节内部领先度差 12 个百分点 → <b>买环节内强的，不买环节内弱的</b>。"}, {"no": "⑥", "t": "服务器 / 整机 / ODM", "d": "把芯片和绳子装成机器。", "cn": ["601138", "000977"], "us": ["usJBL.O", "usCLS.O", "usIBM.O", "usANET.O", "usCSCO.O"], "sig": "云厂服务器订单｜ODM 产能利用率与产能扩建（中际/新易盛多处厂房扩建，2027 交付）", "confirm": "工业富联 5 日 +5.7% 转正｜浪潮信息 5 日 −14.0% <b class='bad'>明显掉队</b>", "act": "同环节内部分化极大（+5.7% vs −14.0%）→ <b class='bad'>这就是「国内电 vs 国外绳」在同一条新闻里的差别</b>：富联接全球云厂单（🟠国外绳），浪潮吃国内政企（🔵国内电）。"}, {"no": "⑦", "t": "数据中心供电 / 液冷 / IDC", "d": "机房里真正耗电散热的部分，AI 越猛这层越紧俏。", "cn": ["002837", "002335"], "us": ["usVRT.N", "usETN.N", "usEQIX.O", "usDLR.O"], "sig": "单柜功率密度提升｜Vertiv 订单｜伊顿配电与 UPS｜FLNC 电网侧储能", "confirm": "<b class='gd'>外围已确认</b>：Vertiv 今晚 +14.77%、Eaton +8.15%、Fluence +14.45%", "act": "<b class='wn'>这是「外围已启动、A 股还没动」的一环</b>：英维克 5 日 −6.0%、科华 −4.4%。<b>但要过反向检验</b>：明天开盘若不跟，说明 A 股不认，别硬凑。"}, {"no": "⑧", "t": "电力（火电/水电/核电/燃机）", "d": "整条链的最末端，也是最滞后的一环。", "cn": ["600900", "601985", "600795"], "us": ["usVST.N", "usTLN.O", "usCEG.O", "usNRG.O", "usGEV.O", "usBEP.O", "usFSLR.O", "usENPH.O", "usRUN.O", "usSO.O", "usDUK.O", "usNEE.O", "usAEP.O"], "sig": "数据中心用电量增速｜美国 AI 数据中心电力缺口｜核电重启审批｜A 股电价与煤价", "confirm": "<b class='up'>外围已启动</b>：VST +8.24、TLN +8.62、CEG +5.88、GEV +9.60；而防御端 DUK −1.12、SO −0.57、NEE −0.13", "act": "<b class='bad'>⚠️ 陷阱：A 股电力现在 60 日 +6~12%、距 60 日高只有 0.9~3.6%、区间位 96~99% —— 已经在历史高位。</b>外围电力涨的是「AI 供电」新叙事，A 股电力涨的是电价+煤价，<b class='bad'>不是同一个逻辑</b>。这正好是「日内强势的方向是卖点」第 6 次。"}, {"no": "⑨", "t": "电网设备 / 储能 / 光伏（最末端）", "d": "接最后一公里：把电送到机房、把电存起来。", "cn": ["002518", "300274"], "us": ["usFLNC.O", "usFSLR.O", "usENPH.O", "usRUN.O", "usETN.N", "usGEV.O"], "sig": "特高压与配网投资｜电网侧储能招标｜光伏出口（2026H1 天合境外 171 亿/319.85 亿 = 53.5%）", "confirm": "阳光电源 5 日 −7.4%、科士达 −4.3% —— <b class='bad'>还没启动</b>", "act": "位置低但没信号。<b>低位不等于买点，止跌才是。</b>等 5 日涨幅转正再谈。"}], "CORR": [["300502", "新易盛", "④光模块", 0.896], ["300394", "天孚通信", "④光器件", 0.792], ["601138", "工业富联", "⑥服务器", 0.724], ["002463", "沪电股份", "⑤AI PCB", 0.72], ["600183", "生益科技", "⑤覆铜板", 0.672], ["688256", "寒武纪", "②AI芯片", 0.649], ["002837", "英维克", "⑦液冷", 0.6], ["603986", "兆易创新", "③存储", 0.572], ["301308", "江波龙", "③存储", 0.536], ["000977", "浪潮信息", "⑥服务器", 0.465], ["002371", "北方华创", "②设备", 0.466], ["002335", "科华数据", "⑦供电", 0.473], ["600900", "长江电力", "⑧水电", 0.244], ["601985", "中国核电", "⑧核电", 0.156]], "PAY": [{"id": "roi", "n": "红利防御链", "st": "🔴 高位·正在塌方", "d": "银行ETF 512800 0.916 −1.08% 位14%｜红利低波 512890 1.256 −1.18% 位8%｜工行 −2.66% 建行 −2.90% 平安 −3.17% 茅台 −3.15%｜上证50 −0.86% 位83%", "why": "60 日高位 → 11/23 塌方第 1 天", "act": "不碰。等它跌出区间位 30% 以下再说。"}, {"id": "ai", "n": "AI 算力链", "st": "🟡 超跌反弹中", "d": "光模块 60 日 −56~−59%、区间位 0%，但 5 日 +2~+8.7% 已转正｜PCB 沪电 5 日 +11.8%｜服务器 工业富联 +5.7% / 浪潮 −14.0% 分化｜存储 5 日 −3~4% 未启动", "why": "60 日腰斩 → 11/23 起第一波反弹", "act": "最强、最挤、也最容易接盘。<b class='wn'>不是现在买的位置。</b>"}, {"id": "pwr", "n": "电力资源链", "st": "🔴 高位·外围新叙事", "d": "A 股 长江电力 60 日 +12.1% 距高 −0.9%｜中国核电 +12.5% 距高 −2.0%｜国电电力 +6.1% 距高 −3.6%｜区间位 96~99%", "why": "A 股靠电价+煤价，美股靠「AI 供电」叙事", "act": "<b class='bad'>两个逻辑，别混。</b>外围电力今晚大涨 ≠ A 股电力该涨。"}, {"id": "broad", "n": "宽基 Beta（你的持仓）", "st": "🟦 中性·跟所有链都不亲", "d": "159338 中证A500｜11/23 +0.80%，区间位 79%｜11/23 涨停 146 / 跌停 3，两市 1.5529 万亿", "why": "既不在红利链也不在 AI 链，在「所有链的加权平均」里", "act": "<b>这就是它跟涨不跟、跟跌不跌的原因。</b>想押某条链，要么换工具 ETF，要么接受 Beta 的平庸。"}], "POS": {"601138": 8, "688256": 40, "002371": 26, "603986": 4, "301308": 4, "300308": 4, "300502": 8, "300394": 8, "002463": 18, "600183": 2, "000977": 2, "002837": 2, "002335": 7, "600900": 93, "601985": 84, "600795": 69, "002518": 5, "300274": 10}, "tsA": "2026-11-23 收盘", "tsU": "2026-11-23 23:31 北京 / 美东 10:31"};
+const A=D.A,U=D.U,POS=D.POS;
+function f2(x){if(x===null||x===undefined||isNaN(x))return '—';return (x>=0?'+':'')+x.toFixed(1)+'%';}
+function cl(x){if(x===null||x===undefined||isNaN(x))return 'dim';return x>0?'up':(x<0?'dn':'mu');}
+function tagOf(o){
+  if(o.g==='H')return '<span class="k kH">🌍国外绳</span>';
+  if(o.g==='M')return '<span class="k kM">🔀半全球</span>';
+  return '<span class="k kC">🔵国内电</span>';
+}
+function cnRow(c){
+  const a=A[c];if(!a)return '';
+  const p=POS[c]||0;
+  return '<tr><td>'+a.name+'<br><span class="mono" style="font-size:10.5px;color:var(--dim)">'+c+'</span></td>'+
+   '<td class="num '+cl(a.r5)+'">'+f2(a.r5)+'</td>'+
+   '<td class="num '+cl(a.r20)+'">'+f2(a.r20)+'</td>'+
+   '<td class="num '+cl(a.r60)+'">'+f2(a.r60)+'</td>'+
+   '<td class="num '+cl(a.dhi)+'">'+f2(a.dhi)+'</td>'+
+   '<td class="num">'+p+'%</td></tr>';
+}
+function usRow(c){
+  const u=U[c];if(!u)return '';
+  const lv=(u.live!==undefined)?u.live:u.r5;
+  return '<tr><td>'+u.name+'<br><span class="mono" style="font-size:10.5px;color:var(--dim)">'+c.replace('us','').replace('.OQ','').replace('.N','').replace('.O','')+'</span></td>'+
+   '<td>'+u.g+'</td>'+
+   '<td class="num '+(u.live!==undefined?'up':'dn')+'">'+(u.live!==undefined?f2(u.live):'—')+'</td>'+
+   '<td class="num '+cl(u.r5)+'">'+f2(u.r5)+'</td>'+
+   '<td class="num '+cl(u.r60)+'">'+f2(u.r60)+'</td>'+
+   '<td class="num '+cl(u.dhi)+'">'+f2(u.dhi)+'</td></tr>';
+}
+function renderClock(){
+  let h='';
+  D.PAY.forEach(p=>{
+    const st=p.st.split(' ')[0], stc=st.indexOf('🔴')===0?'st-r':(st.indexOf('🟡')===0?'st-y':(st.indexOf('🟢')===0?'st-g':'st-b'));
+    h+='<div class="node '+(st.indexOf('🔴')===0?'lit':(st.indexOf('🟢')===0?'lit':'cold'))+'">'+
+      '<div class="node-h"><span class="nd-t">'+p.n+'</span><span class="nd-st '+stc+'">'+p.st+'</span></div>'+
+      '<div class="nd-d" style="margin-top:6px">'+p.d+'</div>'+
+      '<div class="sig"><b>为什么在这个位置：</b>'+p.why+'</div>'+
+      '<div class="sig"><b>动作：</b>'+p.act+'</div></div>';
+  });
+  document.getElementById('clock').innerHTML=h;
+}
+function renderChain(){
+  let h='';
+  D.CHAIN.forEach((L,i)=>{
+    const cn=L.cn.map(cnRow).join('');
+    const us=L.us.map(usRow).join('');
+    let node='';
+    if(L.cn.length||L.us.length){
+      node+='<div class="cols">'+
+        (cn?'<div><div class="k" style="color:var(--ac);border-color:#2a4470">国内 A 股</div><div class="tw"><table class="tbl"><thead><tr><th>名称</th><th class="num">5日</th><th class="num">20日</th><th class="num">60日</th><th class="num">距60高</th><th class="num">区间位</th></tr></thead><tbody>'+cn+'</tbody></table></div></div>':'')+
+        (us?'<div><div class="k" style="color:var(--up);border-color:#6b2b47">美股对标（今晚实时）</div><div class="tw"><table class="tbl"><thead><tr><th>名称</th><th>环节</th><th class="num">今晚</th><th class="num">5日</th><th class="num">60日</th><th class="num">距60高</th></tr></thead><tbody>'+us+'</tbody></table></div></div>':'')+
+      '</div>';
+    }
+    let st='<span class="nd-st st-b">观察</span>';
+    if(i===3)st='<span class="nd-st st-g">已启动 · 最拥挤</span>';
+    if(i===6)st='<span class="nd-st st-y">外围已启动 · A股未动</span>';
+    if(i===7)st='<span class="nd-st st-r">高位 · 外围新叙事</span>';
+    h+='<div class="node '+(i===3?'lit':((i===6||i===7)?'cold':''))+'">'+
+      '<div class="node-h"><span class="nd-no">'+L.no+'</span><span class="nd-t">'+L.t+'</span>'+st+'</div>'+
+      '<div class="nd-d">'+L.d+'</div>'+node+
+      '<div class="sig"><b>启动信号（可观察）：</b>'+L.sig+'</div>'+
+      '<div class="sig"><b>确认信号（要看到）：</b>'+L.confirm+'</div>'+
+      '<div class="sig"><b>动作：</b>'+L.act+'</div></div>';
+    if(i<D.CHAIN.length-1)h+='<div class="arrow">▼<small>传导方向：下游需求 → 上游订单</small></div>';
+  });
+  document.getElementById('chain').innerHTML=h;
+}
+function renderCorr(){
+  let h='';
+  D.CORR.forEach(c=>{
+    const r=c[3];
+    let rd='<span class="mu">中位 · 同链</span>';
+    if(r>=0.8)rd='<b class="gd">极强 · 同链同涨同跌</b>';
+    else if(r>=0.6)rd='<b class="gd">强 · 同链</b>';
+    else if(r>=0.45)rd='<span class="wn">中 · 半链</span>';
+    else rd='<b class="bad">弱 · 几乎无关（不同链）</b>';
+    h+='<tr><td>'+c[1]+'</td><td>'+c[2]+'</td><td class="num">'+r.toFixed(3)+'</td><td>'+rd+'</td></tr>';
+  });
+  document.getElementById('corr').innerHTML=h;
+}
+document.getElementById('ts').innerHTML='A 股 '+D.tsA+' ｜ 美股 '+D.tsU+' ｜ 相关性基于 140 交易日';
+renderClock();renderChain();renderCorr();
+</script>
+</body>
+</html>

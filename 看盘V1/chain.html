@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0b0f17">
+<title>产业链地图 · 国内↔美股</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+ --bg:#0b0f17;--panel:#121826;--panel2:#18202f;--line:#22304a;
+ --tx:#e8eef7;--mu:#8b9ab3;--dim:#5d6d88;
+ --up:#ff5b5b;--dn:#12c48b;--wn:#ffb648;--gd:#3ecf8e;--ac:#5b9cff;--pu:#a78bfa;
+}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--tx);font:15px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+ padding-bottom:env(safe-area-inset-bottom)}
+.wrap{max-width:980px;margin:0 auto;padding:12px}
+a{color:var(--ac)}
+header{position:sticky;top:0;z-index:20;background:rgba(11,15,23,.94);backdrop-filter:blur(12px);
+ border-bottom:1px solid var(--line);padding:10px 0}
+.hd{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.logo{font-size:17px;font-weight:800;letter-spacing:.3px}
+.logo span{color:var(--ac)}
+.sub{color:var(--mu);font-size:12px;margin-top:3px}
+button.btn{background:var(--panel2);border:1px solid var(--line);color:var(--tx);border-radius:8px;
+ padding:8px 12px;font-size:13px;cursor:pointer}
+button.btn.pri{background:var(--ac);color:#06101f;border-color:transparent;font-weight:700}
+button.btn:active{transform:scale(.97)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px}
+h3{font-size:14px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+h3 .n{font-size:11px;color:var(--mu);font-weight:500;margin-left:auto}
+.row{display:flex;gap:8px;padding:7px 0;border-bottom:1px dashed rgba(255,255,255,.055);font-size:13.5px}
+.row:last-child{border-bottom:none}
+.lab{color:var(--mu);flex:0 0 78px;font-size:12.5px}
+.val{flex:1;min-width:0}
+.foot{margin-top:9px;padding:9px 10px;background:rgba(91,156,255,.07);border-left:3px solid var(--ac);
+ border-radius:0 7px 7px 0;font-size:12.8px;line-height:1.65;color:#c6d4e8}
+.up{color:var(--up)}.dn{color:var(--dn)}.wn{color:var(--wn)}.gd{color:var(--gd)}.ac{color:var(--ac)}.mu{color:var(--mu)}.dim{color:var(--dim)}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.tbl th{color:var(--mu);font-weight:600;text-align:left;padding:6px 5px;border-bottom:1px solid var(--line);font-size:11.5px;white-space:nowrap}
+.tbl td{padding:6px 5px;border-bottom:1px solid rgba(255,255,255,.045);vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.tbl .num{text-align:right;font-family:ui-monospace,Menlo,monospace;white-space:nowrap}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}
+.tt{font-size:10.5px;border:1px solid var(--line);border-radius:4px;padding:1px 5px;white-space:nowrap;display:inline-block}
+.gH{color:#ff8ab8;border-color:#6b2b47;background:rgba(255,90,160,.1)}
+.gM{color:var(--wn);border-color:#6b5228;background:rgba(255,182,72,.09)}
+.gC{color:#7fd7ff;border-color:#24506b;background:rgba(90,190,255,.08)}
+.gQ{color:var(--mu);border-color:var(--line)}
+.lay{scroll-margin-top:74px}
+.lay-hd{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:2px}
+.lay-no{font-size:19px;font-weight:900;color:var(--pu)}
+.lay-t{font-size:15px;font-weight:800}
+.lay-tag{font-size:10.5px;color:var(--mu);border:1px solid var(--line);border-radius:20px;padding:1px 8px}
+.lay-d{font-size:12.3px;color:var(--mu);margin-bottom:8px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+@media(max-width:720px){.cols{grid-template-columns:1fr}}
+.col-h{font-size:11.5px;font-weight:700;color:var(--mu);margin-bottom:4px;display:flex;align-items:center;gap:5px}
+.col-h .dot{width:7px;height:7px;border-radius:50%}
+.cn-l{background:linear-gradient(90deg,rgba(91,156,255,.10),transparent)}
+.us-l{background:linear-gradient(90deg,rgba(255,90,160,.10),transparent)}
+.legend{display:flex;gap:7px;flex-wrap:wrap;margin:6px 0 10px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:2px 0 8px;-webkit-overflow-scrolling:touch}
+.chip{flex:0 0 auto;font-size:12px;padding:6px 11px;border:1px solid var(--line);border-radius:20px;
+ background:var(--panel);color:var(--tx);cursor:pointer;white-space:nowrap}
+.chip:active{background:var(--panel2)}
+.etfbar{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.etfchip{font-size:11.5px;border:1px solid var(--line);border-radius:7px;padding:5px 8px;background:var(--panel2);
+ cursor:pointer;white-space:nowrap}
+.etfchip b{font-family:ui-monospace,Menlo,monospace}
+.rule{display:flex;gap:9px;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,.06);font-size:13px}
+.rule:last-child{border-bottom:none}
+.rule .k{flex:0 0 26px;height:22px;border-radius:6px;background:var(--ac);color:#06101f;display:flex;
+ align-items:center;justify-content:center;font-weight:800;font-size:12px}
+.gate{background:rgba(255,91,91,.08);border:1px solid rgba(255,91,91,.3);border-radius:10px;padding:11px;margin-top:8px}
+.big{font-size:30px;font-weight:900;font-family:ui-monospace,Menlo,monospace;letter-spacing:-1px}
+.srch{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--tx);border-radius:9px;
+ padding:10px 12px;font-size:14px;margin-bottom:8px}
+.hidden{display:none!important}
+footer{color:var(--dim);font-size:11.5px;text-align:center;padding:18px 10px 26px;line-height:1.8}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+ <div class="hd">
+  <div style="flex:1;min-width:200px">
+   <div class="logo">产业链地图 <span>国内 ↔ 美股</span></div>
+   <div class="sub" id="ts">加载中…</div>
+  </div>
+  <button class="btn" onclick="location.href='rotate.html'">🔗 题材轮动图</button>
+  <button class="btn" onclick="location.href='rotate.html'">🔗 题材轮动图</button>
+  <button class="btn" onclick="location.href='board.html'">🎯 总看板</button>
+  <button class="btn pri" onclick="refresh()">⟳ 刷新A股</button>
+ </div>
+</div></header>
+
+<div class="wrap">
+ <div class="card">
+  <h3>🧭 这张图怎么用 <span class="n">两条轴</span></h3>
+  <div class="foot" style="margin:0 0 8px">
+   <b>纵轴 = 产业链层级</b>（自下而上：电力 → 数据中心 → 芯片 → 存储 → 绳子 → 服务器 → 云）<br>
+   <b>横轴 = 需求来源</b>：这家公司的钱，是从<b class='ac'>国内客户</b>口袋里出，还是从<b class='up'>海外云厂/全球订单</b>口袋里出。
+  </div>
+  <div class="rule"><div class="k">1</div><div><b>🌍 国外绳（海外收入高）</b> → 和美股同涨同跌。外围大涨，它明天大概率高开。<br><span class="mu">典型：新易盛 97.9%、中际旭创 94.8%、剑桥 93.9%、天孚 55.5%、长飞 &gt;40%、工业富联</span></div></div>
+  <div class="rule"><div class="k">2</div><div><b>🔀 半全球化</b> → 两头看。国内集采和海外订单都会影响它，波动更大但也更有弹性。<br><span class="mu">典型：亨通 22.0%、烽火 35.1%、中天 17.3%（但海外销售额 +80%）、沪电、深南</span></div></div>
+  <div class="rule"><div class="k">3</div><div><b>🔵 国内电（纯内需）</b> → <b class="bad">美股涨它不涨</b>。它只看国内政策、煤价、电价、招标。<br><span class="mu">典型：北方华创、中芯国际、寒武纪、浪潮信息、所有传统电力股、IDC</span></div></div>
+  <div class="rule"><div class="k">4</div><div><b>⚠️ 最容易亏钱的一步：</b>把「国内电」当「国外绳」买。<span class="bad">今晚就是活教材</span> —— 美股英伟达 +35.4%、AMAT +15.1%，A 股北方华创 <span class="dn">−6.55%</span>、中芯 <span class="dn">−3.08%</span>。同一天、同一主题、方向相反。</div></div>
+  <div class="legend">
+   <span class="tt gH">🌍 国外绳 · 已核实</span>
+   <span class="tt gM">🔀 半全球化</span>
+   <span class="tt gC">🔵 国内电 · 已核实</span>
+   <span class="tt gQ">待核 · 收入结构未核实</span>
+  </div>
+  <div class="hint" style="font-size:11.5px;color:var(--dim)">海外收入占比来自 2026 年中报。标「待核」的是我没有逐个核实的，请以公司半年报为准 —— 这是做这张表的唯一硬门槛。</div>
+ </div>
+
+ <div class="chips" id="chips"></div>
+ <div id="layers"></div>
+
+ <div class="card" id="etfsec">
+  <h3>💰 ETF 一览（每层能买到什么 · 1 手成本） <span class="n">小账户（千元级）</span></h3>
+  <div class="foot" style="margin:0 0 9px">
+   <b>个股 1 手门槛</b>：长飞 21,008 元｜中际旭创 41,720 元｜新易盛 18,136 元｜天孚 11,630 元｜亨通 3,700 元｜北方华创 54,109 元｜寒武纪 91,480 元 —— <b class="bad">全部买不起</b>。<br>
+   <b>ETF 才是小账户唯一路径</b>：最低 38 元起（通信ETF 515880）。
+  </div>
+  <div id="etfbody"></div>
+  <div class="gate">
+   <b class="big" style="color:var(--up)">&le;50%</b> <span class="mu">← 写死的单标的上限</span><br>
+   <b>加仓闸门：买完这个标的占总资产 &gt; 50% 一律不买。</b>如果某个标的已经占到 60%、90%，那么「加仓」在算术上就不可能 —— <b class="bad">减仓才是唯一的路</b>。<br>
+   <b>所以顺序是：先减仓 → 仓位进闸门内 → 再谈买哪条链。</b>
+  </div>
+ </div>
+
+ <div class="card">
+  <h3>🧪 三条可验证的规则（不靠猜）</h3>
+  <div class="rule"><div class="k">A</div><div><b>共振检验</b>：外围涨 → 只看该链里 🌍 那格的 A 股。如果 🌍 那格没动，说明市场不认这条链，别硬凑。</div></div>
+  <div class="rule"><div class="k">B</div><div><b>反向检验</b>：外围涨、🌍那格 A 股跌 → <b class="bad">这不是「还没轮到你」，这是「资金不认」，要立刻换方向</b>（今晚北方华创就是）。</div></div>
+  <div class="rule"><div class="k">C</div><div><b>国内电只跟国内</b>：政策、招标量、煤价、电价、利率。拿美股当它的信号 = 用错了尺子。</div></div>
+ </div>
+
+ <footer>
+  数据快照：A 股 2026-11-23 收盘（可一键刷新）｜美股 2026-11-23 23:31 北京时间 / 美东 10:31（开盘约 1 小时）<br>
+  美股部分为静态快照，腾讯/新浪接口在浏览器里受跨域限制无法自动刷新，盘中需要手动更新。<br>
+  海外收入占比来自各公司 2026 年中报。本文为个人研究笔记，<b>不构成投资建议</b>，盘中价格秒级变化。
+ </footer>
+</div>
+
+<script>
+const DATA={"tsA": "2026-11-23 收盘", "tsU": "2026-11-23 23:31 北京 / 美东 10:31（开盘约 1 小时）", "L": [{"no": "①", "t": "电力 / 发电", "d": "所有算力的物理底座。分火电、水电、核电、光伏、燃机与电网设备。", "tag": "🔵 纯内需为主", "cn": [{"c": "sh600011", "n": "华能国际", "s": "火电", "g": "C", "x": -2.03, "pe": "16.4", "px": 7.74}, {"c": "sh601991", "n": "大唐发电", "s": "火电", "g": "C", "x": 0.89, "pe": "11.8", "px": 4.52}, {"c": "sh600795", "n": "国电电力", "s": "火电/水电", "g": "C", "x": -2.69, "pe": "22.2", "px": 5.42}, {"c": "sh600900", "n": "长江电力", "s": "水电", "g": "C", "x": -0.85, "pe": "23.5", "amt": "46.3亿", "px": 31.35}, {"c": "sh600025", "n": "华能水电", "s": "水电", "g": "C", "x": 0.0, "pe": "25.4", "px": 11.59}, {"c": "sh600886", "n": "国投电力", "s": "水电/火电", "g": "C", "x": -3.98, "pe": "18.6", "px": 16.15}, {"c": "sh601985", "n": "中国核电", "s": "核电", "g": "C", "x": -2.0, "pe": "27.3", "px": 9.78}, {"c": "sz003816", "n": "中国广核", "s": "核电", "g": "C", "x": -3.54, "pe": "21.6", "px": 4.63}, {"c": "sh600905", "n": "三峡能源", "s": "绿电/风电", "g": "C", "x": -2.44, "pe": "110", "px": 3.2}, {"c": "sz001289", "n": "龙源电力", "s": "风电", "g": "C", "x": -1.06, "pe": "40.7", "px": 14.03}, {"c": "sh601012", "n": "隆基绿能", "s": "光伏", "g": "H", "x": 0.73, "pe": "亏损", "px": 10.97}, {"c": "sh688223", "n": "晶科能源", "s": "光伏", "g": "H", "x": -1.82, "pe": "亏损", "px": 3.77}, {"c": "sh600438", "n": "通威股份", "s": "光伏", "g": "H", "x": 1.35, "pe": "亏损", "px": 11.26}, {"c": "sz300274", "n": "阳光电源", "s": "光伏+储能", "g": "M", "x": -0.26, "pe": "17.8", "px": 70.23}], "us": [{"c": "gb_vst", "n": "Vistra", "s": "火电/核电·AI供电", "x": 8.24}, {"c": "gb_tln", "n": "Talen Energy", "s": "核电·AI数据中心", "x": 8.62}, {"c": "gb_nrg", "n": "NRG Energy", "s": "火电+零售", "x": 6.81}, {"c": "gb_ceg", "n": "Constellation", "s": "核电（最纯）", "x": 5.88}, {"c": "gb_gev", "n": "GE Vernova", "s": "燃机/电网设备", "x": 9.6}, {"c": "gb_etn", "n": "Eaton", "s": "电网/供电设备", "x": 8.15}, {"c": "gb_vrt", "n": "Vertiv", "s": "数据中心供电+液冷", "x": 14.77}, {"c": "gb_bep", "n": "Brookfield Renewable", "s": "水电/风", "x": 2.23}, {"c": "gb_fslr", "n": "First Solar", "s": "光伏", "x": 6.79}, {"c": "gb_enph", "n": "Enphase", "s": "光伏+储能", "x": 7.39}, {"c": "gb_run", "n": "Nextracker", "s": "光伏支架/跟踪", "x": 6.29}, {"c": "gb_flnc", "n": "Fluence", "s": "电网侧储能", "x": 14.45}, {"c": "gb_nee", "n": "NextEra Energy", "s": "传统公用事业（防御）", "x": -0.13}, {"c": "gb_duk", "n": "Duke Energy", "s": "传统公用事业（防御）", "x": -1.12}, {"c": "gb_so", "n": "Southern Co", "s": "传统公用事业（防御）", "x": -0.57}, {"c": "gb_aep", "n": "American Electric Power", "s": "传统公用事业（防御）", "x": 0.82}], "etf": [{"c": "sz159611", "n": "电力ETF 广发", "x": -1.43, "px": 1.031}, {"c": "sh561560", "n": "电力ETF 华泰柏瑞", "x": -1.34, "px": 1.253}, {"c": "sz159625", "n": "绿色电力ETF 嘉实", "x": -1.33, "px": 1.188}, {"c": "sh515790", "n": "光伏ETF 华泰柏瑞", "x": 1.26, "px": 0.643}, {"c": "sz159755", "n": "电池ETF 广发", "x": 1.44, "px": 0.703}], "note": "<b>这一层的关键：</b>美股电力今晚<span class='up'>内部劈叉</span> —— AI 供电链（Vistra/Talen/CEG/GEV/Vertiv）大涨 6~15%，而传统公用事业（NextEra/Duke/Southern）<span class='dn'>下跌</span>。A 股电力股 11/23 几乎全线下跌（国投 −3.98%、中国广核 −3.54%、国电 −2.69%）。<b class='bad'>这说明「防御」内部都在分化，钱是在搬家，不是有人在买防御。</b>对应 A 股最接近「AI 供电」的是中国核电 601985。"}, {"no": "②", "t": "数据中心硬件（供电/液冷/机柜）", "d": "机房里真正耗电和散热的部分，AI 越猛这层越紧俏。", "tag": "🟠 混合（设备出海占三成）", "cn": [{"c": "sz002837", "n": "英维克", "s": "液冷/温控", "g": "M", "x": 2.25, "pe": "85", "px": 32.76}, {"c": "sz002335", "n": "科华数据", "s": "电源+IDC", "g": "C", "x": 3.7, "pe": "30.5", "px": 22.42}, {"c": "sz002518", "n": "科士达", "s": "UPS/数据中心", "g": "C", "x": 3.31, "pe": "21.0", "px": 24.01}, {"c": "sz300442", "n": "润泽科技", "s": "IDC 机房", "g": "C", "x": 1.04, "pe": "36.2", "px": 47.45}, {"c": "sh603881", "n": "数据港", "s": "IDC", "g": "C", "x": 1.84, "pe": "110", "px": 17.75}, {"c": "sz300383", "n": "光环新网", "s": "IDC/云", "g": "C", "x": 0.11, "pe": "亏损", "px": 8.87}], "us": [{"c": "gb_vrt", "n": "Vertiv", "s": "供电+液冷", "x": 14.77}, {"c": "gb_etn", "n": "Eaton", "s": "配电/UPS", "x": 8.15}, {"c": "gb_anet", "n": "Arista Networks", "s": "数据中心交换机", "x": 9.84}, {"c": "gb_eqix", "n": "Equinix", "s": "IDC  REIT", "x": 6.51}, {"c": "gb_dlr", "n": "Digital Realty", "s": "IDC  REIT", "x": 4.9}, {"c": "gb_csco", "n": "Cisco", "s": "网络设备", "x": 6.34}], "etf": [{"c": "sz159890", "n": "云计算ETF 招商", "x": 2.26, "px": 1.315}, {"c": "sh516510", "n": "云计算ETF 易方达", "x": 2.33, "px": 1.275}, {"c": "sz159819", "n": "人工智能ETF 易方达", "x": 2.5, "px": 1.272}], "note": "<b>Vertiv 今晚 +14.77%，是全场涨幅第二的工业股</b> —— 说明市场已经把「AI 耗电」当成主线在交易，而不是单纯交易芯片。A 股这一层最纯的标的是 IDC，但 IDC 是<b class='bad'>纯内需生意（房租制、吃国内流量）</b>，不吃外围。"}, {"no": "③", "t": "芯片（算力核心）", "d": "分 GPU/ASIC、CPU、代工、设备、EDA、封测、模拟。", "tag": "🟣 内需为主（设备/代工）", "cn": [{"c": "sz002371", "n": "北方华创", "s": "半导体设备", "g": "C", "x": -6.55, "pe": "68.1", "px": 541.09}, {"c": "sh688981", "n": "中芯国际", "s": "代工", "g": "C", "x": -3.08, "pe": "122", "px": 121.6}, {"c": "sh688347", "n": "华虹宏力", "s": "代工/功率", "g": "C", "x": 0.11, "pe": "280", "px": 189.74}, {"c": "sh688256", "n": "寒武纪", "s": "AI 芯片", "g": "C", "x": -0.57, "pe": "138", "px": 914.8}, {"c": "sh688041", "n": "海光信息", "s": "CPU/DCU", "g": "C", "x": -0.15, "pe": "111", "px": 164.0}], "us": [{"c": "gb_nvda", "n": "英伟达", "s": "GPU", "x": 35.4}, {"c": "gb_avgo", "n": "博通", "s": "ASIC/定制+光DSP", "x": 3.2}, {"c": "gb_mrvl", "n": "迈威尔", "s": "定制ASIC/光DSP", "x": 21.9}, {"c": "gb_amd", "n": "AMD", "s": "GPU/CPU", "x": 8.55}, {"c": "gb_intc", "n": "英特尔", "s": "CPU/代工", "x": 14.94}, {"c": "gb_tsm", "n": "台积电 ADR", "s": "代工", "x": 17.01}, {"c": "gb_asml", "n": "ASML", "s": "光刻设备", "x": 10.68}, {"c": "gb_amat", "n": "应用材料", "s": "设备", "x": 15.12}, {"c": "gb_lrcx", "n": "泛林", "s": "刻蚀设备", "x": 15.81}, {"c": "gb_klac", "n": "科磊", "s": "量测检测", "x": 14.29}, {"c": "gb_snps", "n": "新思科技", "s": "EDA", "x": 9.48}, {"c": "gb_cdns", "n": "铿腾电子", "s": "EDA", "x": 9.64}, {"c": "gb_amkr", "n": "艾马克", "s": "封测", "x": 16.93}, {"c": "gb_txn", "n": "德州仪器", "s": "模拟", "x": 11.79}, {"c": "gb_adi", "n": "亚德诺", "s": "模拟", "x": 11.18}], "etf": [{"c": "sz159995", "n": "芯片ETF 华夏", "x": -0.12, "px": 0.813}, {"c": "sh512480", "n": "半导体ETF 国联安", "x": 0.4, "px": 0.748}, {"c": "sh588200", "n": "科创芯片ETF 嘉实", "x": 0.86, "px": 0.822}, {"c": "sz159516", "n": "半导体设备ETF 国泰", "x": -0.78, "px": 0.509}], "note": "<b>今晚最刺眼的一组对照：</b>美股<b class='up'>英伟达 +35.4%、台积电 +17.0%、北方华创对标的 AMAT +15.1%</b>，而 A 股<b class='dn'>北方华创 −6.55%、中芯国际 −3.08%</b>。<b class='bad'>同一天、同一主题、方向相反</b> —— 因为北方华创/中芯卖的是国内晶圆厂的钱，不吃英伟达的钱。这就是「国内电」和「国外绳」最干净的一次对照实验。"}, {"no": "④", "t": "存储", "d": "DRAM / NAND / HBM / 硬盘。AI 存储是这轮最挤的一条。", "tag": "🟤 存储模组多出海，芯片本体靠内需", "cn": [{"c": "sh603986", "n": "兆易创新", "s": "NOR/DRAM/MCU", "g": "C", "x": 4.24, "pe": "13.0", "px": 214.61}, {"c": "sz301308", "n": "江波龙", "s": "存储模组", "g": "M", "x": 3.79, "pe": "5.9", "px": 193.21}, {"c": "sh688525", "n": "佰维存储", "s": "存储模组", "g": "M", "x": 3.11, "pe": "6.1", "px": 122.18}, {"c": "sz001309", "n": "德明利", "s": "存储模组", "g": "M", "x": 1.62, "pe": "5.8", "px": 172.99}, {"c": "sz300475", "n": "香农芯创", "s": "存储分销", "g": "H", "x": 4.04, "pe": "6.8", "px": 79.79}], "us": [{"c": "gb_mu", "n": "美光 Micron", "s": "DRAM/HBM/NAND", "x": 19.96}, {"c": "gb_sndk", "n": "闪迪 Sandisk", "s": "NAND", "x": 18.77}, {"c": "gb_stx", "n": "希捷 Seagate", "s": "硬盘 HDD", "x": 18.82}, {"c": "gb_wdc", "n": "西部数据", "s": "硬盘 HDD", "x": 17.2}], "etf": [{"c": "sz159995", "n": "芯片ETF 华夏", "x": -0.12, "px": 0.813}, {"c": "sh512480", "n": "半导体ETF 国联安", "x": 0.4, "px": 0.748}], "note": "<b>美光 +19.96%、希捷 +18.82%、闪迪 +18.77%</b> —— 存储今晚几乎和芯片同步。<b>注意「存储本体 vs 存储模组」的区别</b>：美光的 HBM/DRAM 是英伟达的命门（供需缺口从 25~30% 扩大到 30%+，部分 200G EML 订单已排到 2028 年）；A 股的江波龙/佰维/德明利是<b>模组和分销</b>，赚的是价格差，海外占比中等，<b>跟美光的弹性不在一个量级</b>。"}, {"no": "⑤", "t": "互联「绳子」", "d": "光纤光缆 + 光模块 + CPO + 连接器 + PCB。这一层是你说的「绳子」。", "tag": "🌍 这一层最多「国外绳」", "cn": [{"c": "sz300502", "n": "新易盛", "s": "光模块 1.6T", "g": "H", "x": 9.92, "pe": "17.4", "ov": "境外 97.9%", "px": 181.36}, {"c": "sz300308", "n": "中际旭创", "s": "光模块 800G/1.6T", "g": "H", "x": 6.1, "pe": "19.0", "ov": "境外 94.8%", "px": 417.2}, {"c": "sh603083", "n": "剑桥科技", "s": "高速数通光模块", "g": "H", "x": 6.35, "pe": "50.6", "ov": "境外 93.9%", "px": 100.0}, {"c": "sz300394", "n": "天孚通信", "s": "光器件/光引擎/CPO", "g": "H", "x": 13.82, "pe": "48.1", "ov": "境外 55.5%", "px": 116.3}, {"c": "sh601869", "n": "长飞光纤", "s": "光纤光缆（棒-纤-缆）", "g": "H", "x": 3.03, "pe": "26.9", "ov": "海外 >40%", "px": 210.08}, {"c": "sh600487", "n": "亨通光电", "s": "光纤光缆+海缆", "g": "M", "x": 2.75, "pe": "14.1", "ov": "境外 22.0%", "px": 37.0}, {"c": "sh600498", "n": "烽火通信", "s": "光纤光缆+设备", "g": "M", "x": 3.17, "pe": "143", "ov": "境外 35.1%", "px": 25.09}, {"c": "sh600522", "n": "中天科技", "s": "光纤光缆+海缆+电力", "g": "M", "x": 2.49, "pe": "16.3", "ov": "境外 17.3%", "px": 21.85}, {"c": "sz002281", "n": "光迅科技", "s": "光芯片+光模块", "g": "C", "x": 3.35, "pe": "45.2", "ov": "境外 26.7%", "px": 82.6}, {"c": "sz000988", "n": "华工科技", "s": "光模块+光芯片", "g": "C", "x": null, "pe": null, "ov": "境外 21.1%", "px": 60.4}, {"c": "sz002475", "n": "立讯精密", "s": "连接器/线缆", "g": "H", "x": 1.23, "pe": "19.8", "ov": "待核", "px": 46.26}, {"c": "sz002463", "n": "沪电股份", "s": "AI PCB", "g": "H", "x": 2.96, "pe": "23.8", "ov": "待核", "px": 82.7}, {"c": "sz002916", "n": "深南电路", "s": "AI PCB/封装基板", "g": "M", "x": -0.9, "pe": "27.9", "ov": "待核", "px": 208.1}, {"c": "sh600183", "n": "生益科技", "s": "覆铜板 CCL", "g": "H", "x": 4.08, "pe": "19.4", "ov": "待核", "px": 60.75}], "us": [{"c": "gb_lite", "n": "Lumentum", "s": "光模块/激光器", "x": 22.55}, {"c": "gb_aaoi", "n": "Applied Opto", "s": "光模块", "x": 22.76}, {"c": "gb_cohr", "n": "Coherent", "s": "光模块/光芯片", "x": 19.65}, {"c": "gb_alab", "n": "Astera Labs", "s": "互联芯片", "x": 19.33}, {"c": "gb_glw", "n": "康宁 Corning", "s": "光纤（长飞对标）", "x": 17.9}, {"c": "gb_fn", "n": "Fabrinet", "s": "光模块代工（天孚大客户）", "x": 17.03}, {"c": "gb_mxl", "n": "MaxLinear", "s": "光芯片", "x": 24.99}, {"c": "gb_crdo", "n": "Credo", "s": "互联芯片", "x": 25.39}, {"c": "gb_cien", "n": "Ciena", "s": "光网络设备", "x": 16.23}, {"c": "gb_viav", "n": "VIAVI", "s": "光测试", "x": 13.93}, {"c": "gb_aph", "n": "Amphenol", "s": "连接器", "x": 10.58}, {"c": "gb_tel", "n": "TE Connectivity", "s": "连接器", "x": 8.16}], "etf": [{"c": "sh515880", "n": "通信ETF 国泰", "x": 5.25, "px": 0.381}, {"c": "sz159995", "n": "芯片ETF 华夏", "x": -0.12, "px": 0.813}], "note": "<b>这是「国外绳」最密集的一层。</b>新易盛境外 97.9%、中际旭创 94.8%（<b>境内收入只剩 5.18%</b>）、剑桥 93.9%、天孚 55.5%、长飞海外超 40%。<b class='up'>所以这一层的 A 股跟美股是同一条绳</b>：今晚美股光通信暴涨 18~25%，明天这一层 A 股大概率高开。<br>唯一要分清的是<b>绳子还有粗细</b>：<b>长飞卖的是「光纤光缆」</b>（棒-纤-缆，全球双寡头之一，对标康宁）<b>；中际/新易盛卖的是「光模块」</b>（对标 Lumentum/Coherent）；<b>天孚是给中际供货的光器件</b>（对标 Fabrinet 生态，注意天孚第一大客户就是 Fabrinet，占其营收超六成）—— 三者客户与估值逻辑都不同。"}, {"no": "⑥", "t": "服务器 / 整机", "d": "把芯片和绳子装成机器，卖给云厂或政企。", "tag": "🟡 强分成两派", "cn": [{"c": "sh601138", "n": "工业富联", "s": "AI 服务器 ODM（富士康系）", "g": "H", "x": 3.01, "pe": "14.3", "px": 38.29}, {"c": "sz000977", "n": "浪潮信息", "s": "服务器（浪潮系）", "g": "C", "x": 2.1, "pe": "13.3", "px": 44.16}, {"c": "sz000063", "n": "中兴通讯", "s": "通信设备+服务器", "g": "C", "x": 1.29, "pe": "29.3", "px": 26.64}], "us": [{"c": "gb_jbl", "n": "Jabil", "s": "服务器/制造代工", "x": 9.33}, {"c": "gb_cls", "n": "Celestica", "s": "服务器/交换机代工", "x": 9.49}, {"c": "gb_smtc", "n": "Semtech", "s": "高速接口芯片", "x": 20.18}, {"c": "gb_ibm", "n": "IBM", "s": "服务器+AI", "x": 4.39}], "etf": [{"c": "sz159819", "n": "人工智能ETF 易方达", "x": 2.5, "px": 1.272}, {"c": "sz159890", "n": "云计算ETF 招商", "x": 2.26, "px": 1.315}], "note": "<b>工业富联和浪潮信息是同一条「AI 服务器」新闻的两张脸</b>：富联接的是全球云厂的代工单（<b class='up'>国外绳</b>），浪潮主要吃国内政企和运营商（<b class='dn'>国内电</b>）。这俩经常一起被媒体当成「AI 服务器板块」一起说，<b class='bad'>但它们对美股的敏感度完全不同</b>。今天就是例子：美股服务器代工全线大涨 9~20%，富联 +3.01%，而它今天的涨幅主要还是自己 11 月的 A500 贝塔属性。"}, {"no": "⑦", "t": "云 / 应用", "d": "真正花钱的人。整条链的需求源头。", "tag": "🟢 需求源头（A股几乎无对应）", "cn": [{"c": "sh513330", "n": "恒生互联网ETF", "s": "中概云（跨市场 T+0）", "g": "H", "x": 0.72, "pe": "", "px": 0.281}], "us": [{"c": "gb_orcl", "n": "Oracle", "s": "云+AI 算力租", "x": 14.86}, {"c": "gb_goog", "n": "Alphabet", "s": "谷歌云", "x": 6.16}, {"c": "gb_amzn", "n": "Amazon", "s": "AWS", "x": 4.09}, {"c": "gb_meta", "n": "Meta", "s": "AI 资本开支", "x": 5.67}, {"c": "gb_msft", "n": "Microsoft", "s": "Azure/OpenAI", "x": 3.98}], "etf": [{"c": "sz513330", "n": "恒生互联网ETF 华夏", "x": 0.72}], "note": "<b>这层是需求的源头，也是你要盯的地方。</b>2026Q2 北美四大云厂资本开支合计超 1700 亿美元，全年指引上修至约 7450 亿美元；谷歌云积压订单 5140 亿、亚马逊全年预期调到约 2200 亿、Meta 下限提到 1300 亿。<b class='bad'>它们砍 capex，上面每一层 A 股都会挨打</b> —— 而砍不砍，只看这几个数。"}]};
+const GB={'H':'🌍 国外绳','M':'🔀 半全球化','C':'🔵 国内电','Q':'待核'};
+const GC={'H':'gH','M':'gM','C':'gC','Q':'gQ'};
+const PX={};
+let UID=0;
+
+function fmt(x){if(x===null||x===undefined)return '<span class="dim">—</span>';
+  return (x>0?'+':'')+x.toFixed(2)+'%';}
+function cls(x){if(x===null||x===undefined)return 'dim';return x>0?'up':(x<0?'dn':'mu');}
+function bid(s){return '<span class="mono" style="font-size:11px;color:var(--dim)">'+s+'</span>';}
+
+function cnRow(o){
+  const t='<span class="tt '+GC[o.g]+'">'+GB[o.g]+'</span>';
+  const ov=o.ov?'<br>'+bid(o.ov):'';
+  return '<tr><td>'+o.n+'<br>'+bid(o.c)+'</td><td>'+(o.s||'')+'<br>'+t+ov+'</td>'+
+    '<td class="num">'+fmt(o.x)+'</td><td class="num" style="color:var(--mu)">'+(o.pe||'')+'</td></tr>';
+}
+function usRow(o){
+  return '<tr><td>'+o.n+'<br>'+bid(o.c.replace('gb_',''))+'</td><td>'+(o.s||'')+'</td>'+
+    '<td class="num '+cls(o.x)+'">'+fmt(o.x)+'</td><td></td></tr>';
+}
+function etfRow(o){
+  const lot=(o.px*100).toFixed(0);
+  const ok=(o.px*100)<=1000;
+  return '<tr><td>'+o.n+'<br>'+bid(o.c)+'</td><td class="num">'+o.px.toFixed(3)+'</td>'+
+    '<td class="num '+cls(o.x)+'">'+fmt(o.x)+'</td>'+
+    '<td class="num">'+lot+' 元</td><td class="num '+(ok?'gd':'dn')+'">'+(ok?'✅ 买得起':'❌ 超预算')+'</td></tr>';
+}
+
+function render(){
+  document.getElementById('ts').innerHTML='A股 '+DATA.tsA+' 收盘 ｜ 美股 '+DATA.tsU;
+  const chips=document.getElementById('chips'), L=document.getElementById('layers');
+  let h='';
+  DATA.L.forEach((L2,i)=>{
+    const id='lay'+i;
+    chips.innerHTML+='<div class="chip" onclick="go(\''+id+'\')">'+L2.no+' '+L2.t+'</div>';
+    let etf='';
+    if(L2.etf&&L2.etf.length){
+      etf='<div class="etfbar">'+L2.etf.map(e=>'<div class="etfchip" onclick="jumpEtf(\''+e.c+'\')">'+e.n+' <b class="'+cls(e.x)+'">'+fmt(e.x)+'</b></div>').join('')+'</div>';
+    }
+    h+='<div class="card lay" id="'+id+'">'+
+      '<div class="lay-hd"><span class="lay-no">'+L2.no+'</span><span class="lay-t">'+L2.t+'</span><span class="lay-tag">'+L2.tag+'</span></div>'+
+      '<div class="lay-d">'+L2.d+'</div>'+
+      '<div class="cols">'+
+        '<div class="cn-l"><div class="col-h"><span class="dot" style="background:var(--ac)"></span>国内 A 股</div>'+
+          '<div class="tw"><table class="tbl"><thead><tr><th>名称/代码</th><th>环节 · 属性</th><th class="num">涨跌</th><th class="num">PE</th></tr></thead><tbody>'+
+          L2.cn.map(cnRow).join('')+'</tbody></table></div></div>'+
+        '<div class="us-l"><div class="col-h"><span class="dot" style="background:var(--up)"></span>美股对标</div>'+
+          '<div class="tw"><table class="tbl"><thead><tr><th>名称/TICKER</th><th>环节</th><th class="num">涨跌</th><th></th></tr></thead><tbody>'+
+          L2.us.map(usRow).join('')+'</tbody></table></div></div>'+
+      '</div>'+etf+
+      (L2.note?'<div class="foot">'+L2.note+'</div>':'')+
+    '</div>';
+  });
+  L.innerHTML=h;
+  renderEtf();
+}
+function renderEtf(){
+  const seen={},rows=[];
+  DATA.L.forEach(L2=>(L2.etf||[]).forEach(e=>{
+    if(seen[e.c]){seen[e.c].x=e.x;return;}
+    seen[e.c]=e;rows.push(e);
+  }));
+  let h='<div class="tw"><table class="tbl"><thead><tr><th>ETF</th><th class="num">现价</th><th class="num">涨跌</th><th class="num">1手成本</th><th class="num">1000元够吗</th></tr></thead><tbody>';
+  rows.forEach(e=>{h+=etfRow(e);});
+  h+='</tbody></table></div>';
+  document.getElementById('etfbody').innerHTML=h;
+}
+function go(id){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});}
+function jumpEtf(c){go('etfsec');}
+
+/* ---- A股实时刷新（腾讯全局变量）---- */
+function refresh(){
+  const btn=document.querySelector('header .btn');btn.textContent='⟳ 拉取中…';
+  const all=[],map={};
+  DATA.L.forEach(L2=>{
+    (L2.cn||[]).forEach(o=>{if(o.c&&!map[o.c]){map[o.c]=o;all.push(o.c);}});
+    (L2.etf||[]).forEach(e=>{if(!map[e.c]){map[e.c]=e;all.push(e.c);}});
+  });
+  const s=document.createElement('script');
+  s.src='https://qt.gtimg.cn/q='+all.join(',')+'&_='+Date.now();
+  s.onload=function(){
+    try{
+      let n=0;
+      all.forEach(function(code){
+        const raw=window['v_'+code];if(!raw)return;
+        const f=raw.split('~');if(f.length<40)return;
+        const o=map[code];if(!o)return;
+        o.px=parseFloat(f[3]);o.x=parseFloat(f[32]);n++;
+      });
+      render();
+      const t=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
+      document.getElementById('ts').innerHTML='A股 '+DATA.tsA+'（已刷新 '+t+'） ｜ 美股 '+DATA.tsU;
+      btn.textContent='✓ '+t+' ('+n+')';
+      setTimeout(function(){btn.textContent='⟳ 刷新A股';},2600);
+    }catch(e){btn.textContent='⚠ 解析失败';}
+    if(s.parentNode)document.head.removeChild(s);
+  };
+  s.onerror=function(){btn.textContent='⚠ 网络受限';if(s.parentNode)document.head.removeChild(s);};
+  document.head.appendChild(s);
+}
+render();
+</script>
+</body>
+</html>
